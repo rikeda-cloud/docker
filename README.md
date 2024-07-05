@@ -20,3 +20,65 @@
 ## memo
 * 作成 -> 起動 -> 停止 -> 破棄 -> 作成 -> ... のような一連の流れをコンテナのライフサイクルという
 * 64bit版のOS上でなければ動作しない
+* サーバを再起動時にDockerEngineを自動起動する設定は存在するが、コンテナを自動起動する設定は存在しない。コンテナを自動起動させるにはスクリプトを用意すれば可能
+* dockerコマンドの基本的な形は `docker コマンド (オプション) 対象 (引数)`
+
+
+## LinuxOSでの操作方法
+
+システム関連
+|コマンド|説明|備考|
+|:--:|:--:|:--:|
+|`sudo systemctl start docker`|DockerEngineの起動||
+|`sudo systemctl stop docker`|DockerEngineの終了||
+|`sudo systemctl enable docker`|DockerEngineの自動起動設定||
+|`docker version`|Dockerの情報を表示する||
+|`docker login`|Dockerレジストリにログインする||
+|`docker logout`|Dockerレジストリからログアウトする||
+|`docker search`|Dockerレジストリで検索する||
+
+コンテナ関連
+|コマンド|説明|備考|
+|:--:|:--:|:--:|
+|`docker container run`|Imageを用いてコンテナを実行| `docker image pull`<br>`docker container create`<br>`docker container start`<br>の一連の操作をまとめたもの|
+|`docker container start`|イメージをコンテナとして開始する||
+|`docker container stop`|コンテナを停止する||
+|`docker container create`|Dockerイメージからコンテナを作成する||
+|`docker container rm`|停止したコンテナを削除する||
+|`docker container exec`|実行中のコンテナ内でプログラムを実行する||
+|`docker container ls`|コンテナ一覧を表示||
+|`docker container cp`|コンテナとホスト間でファイルをコピー||
+|`docker container commit`|コンテナをイメージに変換する||
+
+イメージ関連
+|コマンド|説明|備考|
+|:--:|:--:|:--:|
+|`docker image pull`|イメージをダウンロード||
+|`docker image rm`|イメージを削除する||
+|`docker image ls`|ダウンロードしたイメージ一覧を表示する||
+|`docker image build`|Dockerイメージを作成する||
+
+ボリューム関連
+|コマンド|説明|備考|
+|:--:|:--:|:--:|
+|`docker volume create`|ボリュームを作成する||
+|`docker volume inspect`|ボリュームの詳細情報を表示する||
+|`docker volume prune`|現在マウントされていないボリュームを全て削除する||
+|`docker volume rm`|ボリュームの削除||
+
+ネットワーク関連
+|コマンド|説明|備考|
+|:--:|:--:|:--:|
+|`docker network connect`|コンテナをネットワークに接続する||
+|`docker network disconnect`|コンテナをネットワークから切断する||
+|`docker network create`|ネットワークを作成する||
+|`docker network inspect`|ネットワークの詳細を表示する||
+|`docker network ls`|ネットワークの一覧を表示する||
+|`docker network prune`|現在コンテナに接続されていないネットワークを全て削除する||
+|`docker network rm`|ネットワークを削除する||
+
+オプション
+|オプション|説明|備考|
+|:--:|:--:|:--:|
+|`-d`|バックグラウンドで起動||
+|`-it`|キーボードからの操作を可能にする||
