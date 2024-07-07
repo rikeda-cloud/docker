@@ -17,6 +17,17 @@
 * 開発環境と本番環境の違いを吸収できる
 * 複数のLinuxディストリビューションを使用できる(あくまでもLinuxに限られる)
 
+## ホスト-コンテナ間のファイルコピー
+```
+ホスト　-> コンテナ
+docker run --name app1 -d -p 8086:80 httpd
+touch index.html && echo "Hello World!" > index.html
+docker container cp index.html app1:/usr/local/apache2/htdocs/
+
+コンテナ -> ホスト
+docker cp app1:/usr/local/apache2/htdocs/index.html ./index.html
+```
+
 ## 簡単なWebサーバの立ち上げから削除まで(一連の操作は`docker run --name WEBSERVER -d -p 8080:80 httpd`で置き換え可能)
 1. `docker image pull httpd` イメージをダウンロードする
 2. `docker container create --name WEBSERVER -p 8080:80 httpd` イメージからコンテナを作成する
