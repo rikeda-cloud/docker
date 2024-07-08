@@ -1,0 +1,12 @@
+# DockerComposeのバージョンを記述
+version: "3"
+
+# 大項目を記述
+services:
+  # 項目の要素名を記述
+  apa:
+    # 詳細な設定項目を記述
+    image: httpd
+    ports:
+      - 8080:80
+    restart: always
