@@ -28,6 +28,18 @@ docker container cp index.html app1:/usr/local/apache2/htdocs/
 docker cp app1:/usr/local/apache2/htdocs/index.html ./index.html
 ```
 
+## マウント
+* ホスト側のディレクトリをコンテナ内のディレクトリとしてマウントする
+```
+mkdir dir
+docker run --name app1 -d -p 8087:80 -v ./dir:/usr/local/apache2/htdocs httpd
+```
+* ボリュームを作成してコンテナでそのボリュームをマウントする
+```
+docker volume create abc
+docker run --name app2 -d -p 8080:80 -v abc:/usr/local/apache2/htdocs httpd
+```
+
 ## 簡単なWebサーバの立ち上げから削除まで(一連の操作は`docker run --name WEBSERVER -d -p 8080:80 httpd`で置き換え可能)
 1. `docker image pull httpd` イメージをダウンロードする
 2. `docker container create --name WEBSERVER -p 8080:80 httpd` イメージからコンテナを作成する
