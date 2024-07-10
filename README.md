@@ -193,12 +193,12 @@ restart
 |`docker container commit`|コンテナをイメージに変換する||
 
 イメージ関連
-|コマンド|説明|
-|:--:|:--:|
-|`docker image pull`|イメージをダウンロード|
-|`docker image rm`|イメージを削除する|
-|`docker image ls`|ダウンロードしたイメージ一覧を表示する|
-|`docker image build`|Dockerイメージを作成する|
+|コマンド|説明||
+|:--:|:--:|:--:|
+|`docker image pull`|イメージをダウンロード||
+|`docker image rm`|イメージを削除する||
+|`docker image ls`|ダウンロードしたイメージ一覧を表示する|`docker images`|
+|`docker image build`|Dockerイメージを作成する||
 
 ボリューム関連
 |コマンド|説明|
