@@ -191,6 +191,7 @@ restart
 |`docker login`|Dockerレジストリにログインする|
 |`docker logout`|Dockerレジストリからログアウトする|
 |`docker search`|Dockerレジストリで検索する|
+|`docker stats`|Dockerのリソース使用状況を表示|
 
 コンテナ関連
 |コマンド|説明|備考|
