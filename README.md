@@ -39,6 +39,19 @@ docker run --name app1 -d -p 8087:80 -v ./dir:/usr/local/apache2/htdocs httpd
 docker volume create abc
 docker run --name app2 -d -p 8080:80 -v abc:/usr/local/apache2/htdocs httpd
 ```
+* mountオプションを用いた、より詳細なマウント
+```
+// bind mount 読み書き可能
+docker run --name app3 -d -p 8081:80 --mount type=bind,src=$HOME/testdir,dst=/root/testdir httpd
+// bind mount 書き込み不可
+docker run --name app3 -d -p 8081:80 --mount type=bind,src=$HOME/testdir,dst=/root/testdir,readonly httpd
+// volume mount 読み書き可能
+docker run --name app3 -d -p 8081:80 --mount type=volume,src=vol01,dst=/root/testdir httpd
+// volume mount 書き込み不可
+docker run --name app3 -d -p 8081:80 --mount type=volume,src=vol01,dst=/root/testdir,readonly httpd
+// tmpfs mount
+docker run --name app3 -d -p 8081:80 --mount type=tmpfs,dst=/root/testdir,dst=/datadir,tmpfs-mode=1770,tmpfs-size=42949672960 httpd
+```
 
 ## Docker内でコマンドを実行する
 ```
