@@ -186,17 +186,18 @@ restart
 |`docker container start`|イメージをコンテナとして開始する||
 |`docker container stop`|コンテナを停止する||
 |`docker container create`|Dockerイメージからコンテナを作成する||
-|`docker container rm`|停止したコンテナを削除する||
+|`docker container rm`|停止したコンテナを削除する|`docker container rm -f` 強制削除|
 |`docker container exec`|実行中のコンテナ内でプログラムを実行する||
 |`docker container ls`|コンテナ一覧を表示|`docker ps`と同じ<br>`docker ps -a`|
 |`docker container cp`|コンテナとホスト間でファイルをコピー||
 |`docker container commit`|コンテナをイメージに変換する||
+|`docker container attach`|バックグラウンドで稼働しているコンテナ内に入る||
 
 イメージ関連
 |コマンド|説明||
 |:--:|:--:|:--:|
 |`docker image pull`|イメージをダウンロード||
-|`docker image rm`|イメージを削除する||
+|`docker image rm`|イメージを削除する|`docker image rm -f` 強制削除|
 |`docker image ls`|ダウンロードしたイメージ一覧を表示する|`docker images`|
 |`docker image build`|Dockerイメージを作成する||
 
@@ -231,6 +232,8 @@ restart
 |`--net=ネットワーク名`|コンテナをネットワークに接続する||
 |`-e 環境変数名=値`|環境変数を指定する|`--env`|
 |`-help`|help||
+|`-h`|ホスト名を指定してコンテナを起動する|`--hostname`|
+|`--rm`|コンテナ停止時にコンテナを削除||
 
 ## memo
 * 作成 -> 起動 -> 停止 -> 破棄 -> 作成 -> ... のような一連の流れをコンテナのライフサイクルという
@@ -240,3 +243,4 @@ restart
 * Dockerイメージはそのイメージから作成されたDockerコンテナが存在しない場合に限り、削除することができる
 * イメージのバージョンを指定したい場合は`Image名:バージョン番号`のようにバージョンを指定する
 * `docker commit [コンテナID] [新たに作成するイメージ名]` により、稼働しているコンテナをイメージに変換
+* 稼働中のコンテナ内でCTRL+P,CTRL+Q を入力するとコンテナ外に出られる
