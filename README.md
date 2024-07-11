@@ -39,6 +39,19 @@ docker run --name app1 -d -p 8087:80 -v ./dir:/usr/local/apache2/htdocs httpd
 docker volume create abc
 docker run --name app2 -d -p 8080:80 -v abc:/usr/local/apache2/htdocs httpd
 ```
+* mountオプションを用いた、より詳細なマウント
+```
+// bind mount 読み書き可能
+docker run --name app3 -d -p 8081:80 --mount type=bind,src=$HOME/testdir,dst=/root/testdir httpd
+// bind mount 書き込み不可
+docker run --name app3 -d -p 8081:80 --mount type=bind,src=$HOME/testdir,dst=/root/testdir,readonly httpd
+// volume mount 読み書き可能
+docker run --name app3 -d -p 8081:80 --mount type=volume,src=vol01,dst=/root/testdir httpd
+// volume mount 書き込み不可
+docker run --name app3 -d -p 8081:80 --mount type=volume,src=vol01,dst=/root/testdir,readonly httpd
+// tmpfs mount
+docker run --name app3 -d -p 8081:80 --mount type=tmpfs,dst=/root/testdir,dst=/datadir,tmpfs-mode=1770,tmpfs-size=42949672960 httpd
+```
 
 ## Docker内でコマンドを実行する
 ```
@@ -178,6 +191,7 @@ restart
 |`docker login`|Dockerレジストリにログインする|
 |`docker logout`|Dockerレジストリからログアウトする|
 |`docker search`|Dockerレジストリで検索する|
+|`docker stats`|Dockerのリソース使用状況を表示|
 
 コンテナ関連
 |コマンド|説明|備考|
@@ -186,19 +200,20 @@ restart
 |`docker container start`|イメージをコンテナとして開始する||
 |`docker container stop`|コンテナを停止する||
 |`docker container create`|Dockerイメージからコンテナを作成する||
-|`docker container rm`|停止したコンテナを削除する||
+|`docker container rm`|停止したコンテナを削除する|`docker container rm -f` 強制削除|
 |`docker container exec`|実行中のコンテナ内でプログラムを実行する||
 |`docker container ls`|コンテナ一覧を表示|`docker ps`と同じ<br>`docker ps -a`|
 |`docker container cp`|コンテナとホスト間でファイルをコピー||
 |`docker container commit`|コンテナをイメージに変換する||
+|`docker container attach`|バックグラウンドで稼働しているコンテナ内に入る||
 
 イメージ関連
-|コマンド|説明|
-|:--:|:--:|
-|`docker image pull`|イメージをダウンロード|
-|`docker image rm`|イメージを削除する|
-|`docker image ls`|ダウンロードしたイメージ一覧を表示する|
-|`docker image build`|Dockerイメージを作成する|
+|コマンド|説明||
+|:--:|:--:|:--:|
+|`docker image pull`|イメージをダウンロード||
+|`docker image rm`|イメージを削除する|`docker image rm -f` 強制削除|
+|`docker image ls`|ダウンロードしたイメージ一覧を表示する|`docker images`|
+|`docker image build`|Dockerイメージを作成する||
 
 ボリューム関連
 |コマンド|説明|
@@ -231,6 +246,9 @@ restart
 |`--net=ネットワーク名`|コンテナをネットワークに接続する||
 |`-e 環境変数名=値`|環境変数を指定する|`--env`|
 |`-help`|help||
+|`-h`|ホスト名を指定してコンテナを起動する|`--hostname`|
+|`--rm`|コンテナ停止時にコンテナを削除||
+|`-w`|コンテナ内に入る際に指定したディレクトリで入る||
 
 ## memo
 * 作成 -> 起動 -> 停止 -> 破棄 -> 作成 -> ... のような一連の流れをコンテナのライフサイクルという
@@ -240,3 +258,4 @@ restart
 * Dockerイメージはそのイメージから作成されたDockerコンテナが存在しない場合に限り、削除することができる
 * イメージのバージョンを指定したい場合は`Image名:バージョン番号`のようにバージョンを指定する
 * `docker commit [コンテナID] [新たに作成するイメージ名]` により、稼働しているコンテナをイメージに変換
+* 稼働中のコンテナ内でCTRL+P,CTRL+Q を入力するとコンテナ外に出られる
