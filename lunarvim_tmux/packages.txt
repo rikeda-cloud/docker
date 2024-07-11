@@ -1,9 +1,13 @@
 neovim
 tmux
+starship
+fontconfig
+unzip
 nodejs
 ripgrep
 yarn
 alpine-sdk
+
 
 bash
 curl

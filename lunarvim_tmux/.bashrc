@@ -87,4 +87,6 @@ export NVM_DIR="$HOME/dev/.config/nvim"
 export LS_COLORS="di=38;5;95:*.txt=38;5;0:*.sh=38;5;208:*.c=38;5;190:*.cpp=38;5;190:*.h=38;5;169:*.hpp=38;5;169:*.py=38;5;141:*.json=38;5;88:*.lua=38;5;90"
 set -o vi
 
+eval "$(starship init bash)"
+
 export PATH=/home/rikeda/.local/bin:$PATH
