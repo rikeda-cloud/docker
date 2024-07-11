@@ -57,16 +57,16 @@ fi
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-export VIMRUNTIME=/usr/share/nvim/runtime
+# export VIMRUNTIME=/usr/share/nvim/runtime
 
 # some more ls aliases
 alias py='python3'
 alias python='python3'
-alias v='nvim'
-alias vi='nvim'
-alias vim='nvim'
-alias nconf='cd ~/.config/nvim/lua/'
-alias svi='sudo -E nvim'
+alias v='lvim'
+alias vi='lvim'
+alias vim='lvim'
+alias nconf='cd ~/.local/share/lunarvim/lvim'
+alias svi='sudo -E lvim'
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
@@ -80,9 +80,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export NVM_DIR="$HOME/.config/nvm"
+export NVM_DIR="$HOME/dev/.config/nvim"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export LS_COLORS="di=38;5;95:*.txt=38;5;0:*.sh=38;5;208:*.c=38;5;190:*.cpp=38;5;190:*.h=38;5;169:*.hpp=38;5;169:*.py=38;5;141:*.json=38;5;88:*.lua=38;5;90"
 set -o vi
+
+export PATH=/home/rikeda/.local/bin:$PATH

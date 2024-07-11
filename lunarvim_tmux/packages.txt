@@ -2,9 +2,14 @@ neovim
 tmux
 nodejs
 ripgrep
+yarn
+alpine-sdk
 
+bash
 curl
 wget
 git
 
+cargo
 python3
+tree
