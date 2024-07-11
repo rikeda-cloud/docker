@@ -1,0 +1,6 @@
+vim.api.nvim_set_keymap('n', '<Space><Space>', ':<C-u>CocList<CR>', { silent = true })
+-- vim.api.nvim_set_keymap('n', '<Space>hov', ':<C-u>call CocAction("doHover")<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<Space>def', '<Plug>(coc-definition)', { silent = true })
+vim.api.nvim_set_keymap('n', '<Space>ref', '<Plug>(coc-references)', { silent = true })
+vim.api.nvim_set_keymap('n', '<Space>ren', '<Plug>(coc-rename)', { silent = true })
+vim.api.nvim_set_keymap('n', '<Space>fmt', '<Plug>(coc-format)', { silent = true })

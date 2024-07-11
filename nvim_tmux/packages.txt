@@ -1,0 +1,10 @@
+neovim
+tmux
+nodejs
+ripgrep
+
+curl
+wget
+git
+
+python3
