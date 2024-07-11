@@ -16,4 +16,4 @@ services:
     env_file: .env
     environment:
       - USER=rikeda
-    command: tmux
+    command: ["/bin/bash", "--login"]

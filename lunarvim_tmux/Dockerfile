@@ -1,7 +1,7 @@
 FROM alpine:latest
 ARG USER=please_set_user_environ
 
-COPY .bashrc .tmux.conf .tmux.start.conf /home/${USER}/
+COPY .profile .bashrc .tmux.conf .tmux.start.conf /home/${USER}/
 
 # 必要なパッケージのインストールとユーザーの追加
 COPY packages.txt /tmp/packages.txt
@@ -13,4 +13,4 @@ RUN su -c "bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/re
 
 USER ${USER}
 WORKDIR /home/${USER}
-CMD ["tmux"]
+CMD ["/bin/bash", "--login"]
