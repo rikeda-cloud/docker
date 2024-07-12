@@ -1,3 +1,4 @@
+base-devel
 neovim
 tmux
 starship
@@ -7,7 +8,6 @@ nodejs
 npm
 ripgrep
 yarn
-alpine-sdk
 
 
 bash
