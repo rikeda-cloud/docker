@@ -16,12 +16,6 @@ RUN su -c "bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/re
 # configfileのCOPY
 COPY .profile .bashrc .tmux.conf .tmux.start.conf /home/${USER}/
 
-# Nerd Font をダウンロードしてインストール
-# RUN mkdir -p /usr/share/fonts/nerd-fonts \
-#     && curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/SourceCodePro.zip -o /tmp/nerd-font.zip \
-#     && unzip -q /tmp/nerd-font.zip -d /usr/share/fonts/nerd-fonts \
-#     && /usr/bin/fc-cache -fv
-
 # StarShipプリセットを選択
 RUN starship preset no-runtime-versions -o /home/${USER}/.config/starship.toml
 
