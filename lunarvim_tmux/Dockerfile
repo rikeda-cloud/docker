@@ -17,14 +17,17 @@ RUN su -c "bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/re
 COPY .profile .bashrc .tmux.conf .tmux.start.conf /home/${USER}/
 
 # Nerd Font をダウンロードしてインストール
-RUN mkdir -p /usr/share/fonts/nerd-fonts \
-    && curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/SourceCodePro.zip -o /tmp/nerd-font.zip \
-    && unzip -q /tmp/nerd-font.zip -d /usr/share/fonts/nerd-fonts \
-    && /usr/bin/fc-cache -fv
+# RUN mkdir -p /usr/share/fonts/nerd-fonts \
+#     && curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/SourceCodePro.zip -o /tmp/nerd-font.zip \
+#     && unzip -q /tmp/nerd-font.zip -d /usr/share/fonts/nerd-fonts \
+#     && /usr/bin/fc-cache -fv
 
 # StarShipプリセットを選択
-# RUN starship preset jetpack -o /home/${USER}/.config/starship.toml
-COPY starship.toml /home/${USER}/.config/starship.toml
+RUN starship preset no-runtime-versions -o /home/${USER}/.config/starship.toml
+
+ENV LANG=ja_JP.UTF-8
+ENV LANGUAGE=ja_JP:ja
+ENV LC_ALL=ja_JP.UTF-8
 
 WORKDIR /home/${USER}
 USER ${USER}
