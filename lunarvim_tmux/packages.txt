@@ -4,6 +4,7 @@ starship
 fontconfig
 unzip
 nodejs
+npm
 ripgrep
 yarn
 alpine-sdk

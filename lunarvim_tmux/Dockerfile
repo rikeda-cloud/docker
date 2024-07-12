@@ -5,7 +5,7 @@ ARG USER=please_set_user_environ
 
 # 必要なパッケージのインストール
 COPY packages.txt /tmp/packages.txt
-RUN xargs -a /tmp/packages.txt apk add --no-cache
+RUN apk update && apk upgrade && xargs -a /tmp/packages.txt apk add --no-cache
 
 # ユーザの追加
 RUN adduser -D -S ${USER} --shell /bin/bash
@@ -26,6 +26,6 @@ RUN mkdir -p /usr/share/fonts/nerd-fonts \
 # RUN starship preset jetpack -o /home/${USER}/.config/starship.toml
 COPY starship.toml /home/${USER}/.config/starship.toml
 
-USER ${USER}
 WORKDIR /home/${USER}
+USER ${USER}
 CMD ["/bin/bash", "--login"]
