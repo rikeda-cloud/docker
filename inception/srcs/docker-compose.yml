@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  nginx:
+    stdin_open: true
+    tty: true
+    build:
+      context: ./requirements/nginx/
+    ports:
+      - 8081:80
+    container_name: nginx
+
+  mariadb:
+    stdin_open: true
+    tty: true
+    build:
+      context: ./requirements/mariadb/
+    container_name: mariadb
