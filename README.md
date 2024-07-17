@@ -28,6 +28,19 @@ docker container cp index.html app1:/usr/local/apache2/htdocs/
 docker cp app1:/usr/local/apache2/htdocs/index.html ./index.html
 ```
 
+## ENTRYPOINTとCMD命令
+* ENTRYPOINT命令はコンテナ起動時にコマンドを実行
+* CMD命令はENTRYPOINT命令と組み合わせて使用可能。dockerコマンド実行時に上書き可能。
+* 両コマンドともに下記の記法がある
+```
+ENTRYPOINT ["/bin/bash"] // bashコマンドを直接実行
+ENTRYPOINT /bin/bash // bashコマンドをシェルで実行
+
+CMD ["/bin/bash"] // bashコマンドを直接実行
+CMD /bin/bash // bashコマンドをシェルで実行
+CMD ["-c", "tmux"] // ENTRYPOINTの引数として使用
+```
+
 ## マウント
 * ホスト側のディレクトリをコンテナ内のディレクトリとしてマウントする
 ```
