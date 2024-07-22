@@ -1,39 +1,53 @@
-version: "3"
+version: '3'
 
 services:
-  mysql_container:
-    image: mysql:8.0
-    networks:
-      - wordpress_network
+  db:
+    image: mariadb:latest
     volumes:
-      - mysql_volume:/var/lib/mysql
+      - mysql-vol:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: myrootpass
-      MYSQL_DATABASE: wordpress000db
-      MYSQL_USER: wordpress000kun
-      MYSQL_PASSWORD: wkunpass
+      MYSQL_ROOT_PASSWORD: password1234
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      mynet:
+        ipv4_address: 172.20.0.3
 
-  wordpress_container:
+  wordpress:
     depends_on:
-      - mysql_container
-    image: wordpress
-    networks:
-      - wordpress_network
+      - db
+    image: wordpress:latest
     volumes:
-      - wordpress_volume:/var/www/html
-    ports:
-      - 8082:80
+      - wp-vol:/var/www/html
     restart: always
     environment:
-      WORDPRESS_DB_HOST: mysql_container
-      WORDPRESS_DB_NAME: wordpress000db
-      WORDPRESS_DB_USER: wordpress000kun
-      WORDPRESS_DB_PASSWORD: wkunpass
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    ports:
+      - "8000:80"
+    networks:
+      mynet:
+        ipv4_address: 172.20.0.2
 
+volumes:
+  mysql-vol:
+    driver_opts:
+      type: none
+      device: /data/mysql
+      o: bind
+  wp-vol:
+    driver_opts:
+      type: none
+      device: /data/html
+      o: bind
 
 networks:
-  wordpress_network:
-volumes:
-  mysql_volume:
-  wordpress_volume:
+  mynet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24
