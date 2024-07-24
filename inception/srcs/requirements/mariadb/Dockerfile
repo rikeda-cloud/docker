@@ -1,9 +1,8 @@
-FROM alpine:latest
+FROM debian
 
-RUN apk update && \
-	apk upgrade && \
-	apk add bash && \
-	apk add mariadb && \
-	apk add mariadb-client
+RUN apt-get -y update && \
+	apt-get -y upgrade && \
+	apt-get -y install bash systemd systemd-sysv mariadb-server mariadb-client
 
-ENTRYPOINT bash
+RUN systemctl enable mariadb
+ENTRYPOINT ["/usr/lib/systemd/systemd"]

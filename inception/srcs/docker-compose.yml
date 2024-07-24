@@ -15,9 +15,16 @@ services:
       - /run
     privileged: true
 
-  # mariadb:
-  #   stdin_open: true
-  #   tty: true
-  #   build:
-  #     context: ./requirements/mariadb/
-  #   container_name: mariadb
+  mariadb:
+    stdin_open: true
+    tty: true
+    restart: always
+    build:
+      context: ./requirements/mariadb/
+    ports:
+      - 3306:3306
+    container_name: mariadb
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
