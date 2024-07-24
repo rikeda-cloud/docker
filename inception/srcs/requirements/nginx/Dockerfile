@@ -1,8 +1,8 @@
-FROM alpine:latest
+FROM debian
 
-RUN apk update && \
-	apk upgrade && \
-	apk add bash nginx openssl
+RUN apt-get -y update && \
+	apt-get -y upgrade && \
+	apt-get -y install bash nginx openssl systemd systemd-sysv
 
 RUN mkdir /etc/nginx/certs
 COPY ./conf/openssl.cnf /etc/nginx/certs/
@@ -19,4 +19,6 @@ RUN openssl req -new -key /etc/nginx/certs/server.key -out /etc/nginx/certs/serv
 RUN openssl req -new -x509 -days 365 -key /etc/nginx/certs/ca.key -out /etc/nginx/certs/ca.crt -subj "/C=JP/ST=Tokyo/L=Minato/O=Example/OU=IT/CN=Example CA"
 RUN openssl x509 -req -days 365 -in /etc/nginx/certs/server.csr -CA /etc/nginx/certs/ca.crt -CAkey /etc/nginx/certs/ca.key -CAcreateserial -out /etc/nginx/certs/server.crt -extfile /etc/nginx/certs/openssl.cnf -extensions req_ext
 
-ENTRYPOINT /usr/sbin/nginx -g 'daemon off;' -c /etc/nginx/nginx.conf
+RUN systemctl enable nginx
+
+ENTRYPOINT ["/usr/lib/systemd/systemd"]
