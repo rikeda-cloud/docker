@@ -303,3 +303,96 @@ restart
 * イメージのバージョンを指定したい場合は`Image名:バージョン番号`のようにバージョンを指定する
 * `docker commit [コンテナID] [新たに作成するイメージ名]` により、稼働しているコンテナをイメージに変換
 * 稼働中のコンテナ内でCTRL+P,CTRL+Q を入力するとコンテナ外に出られる
+
+# NGINXでTLSの設定
+```
+1. Dockerファイル内でopensslコマンドで必要な秘密鍵・CSR・証明書を作成する
+FROM alpine:latest
+
+RUN apk update && \
+        apk upgrade && \
+        apk add bash nginx openssl
+
+RUN mkdir /etc/nginx/certs
+COPY ./conf/openssl.cnf /etc/nginx/certs/
+COPY ./conf/nginx.conf /etc/nginx/
+COPY ./tools/index.html /var/www/html/
+
+# 秘密鍵の作成
+RUN openssl genrsa -out /etc/nginx/certs/ca.key 2048 // 認証局の秘密鍵
+RUN openssl genrsa -out /etc/nginx/certs/server.key 2048 // Webサーバの秘密鍵
+# CSR（証明書署名要求）の作成
+RUN openssl req -new -key /etc/nginx/certs/server.key -out /etc/nginx/certs/server.csr -config /etc/nginx/certs/openssl.cnf // WebサーバのCSR
+# CRT（SSLサーバ証明書）の作成
+RUN openssl req -new -x509 -days 365 -key /etc/nginx/certs/ca.key -out /etc/nginx/certs/ca.crt -subj "/C=JP/ST=Tokyo/L=Minato/O=Example/OU=IT/CN=Example CA" // 認証局の証明書
+RUN openssl x509 -req -days 365 -in /etc/nginx/certs/server.csr -CA /etc/nginx/certs/ca.crt -CAkey /etc/nginx/certs/ca.key -CAcreateserial -out　/etc/nginx/certs/server.crt -extfile /etc/nginx/certs/openssl.cnf -extensions req_ext // Webサーバの証明書
+
+ENTRYPOINT /usr/sbin/nginx -g 'daemon off;' -c /etc/nginx/nginx.conf
+```
+2. nginx.confファイル内でTLSを使用するための設定を記述する
+```
+worker_processes  1;
+events {
+    worker_connections  1024;
+}
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen       443 ssl; // sslとすることで暗号化通信
+        server_name  rikeda-cloud.com; // server_nameは証明書に載せる情報と同じものにする
+        root /var/www/html/;
+        ssl_certificate /etc/nginx/certs/server.crt; // Dockerfileで作成したcrtファイルを指定
+        ssl_certificate_key /etc/nginx/certs/server.key; // DOckerfile内で作成したWebサーバ用の秘密鍵ファイルを指定
+
+        location / {
+                        index index.html;
+        }
+    }
+}
+```
+3. opensslコマンドのconfigファイルを作成しておく
+```
+[req]
+default_bits        = 2048
+default_keyfile     = server.key
+distinguished_name = req_distinguished_name
+req_extensions      = req_ext
+x509_extensions     = v3_ca
+prompt = no // Dockerfile内でCSRを作成する時に対話形式だとエラーになる
+
+[req_distinguished_name]
+C = JP
+ST = Minato
+L = Shinjuku
+O = 42tokyo
+OU = IT
+CN = rikeda-cloud.com // 使用したいドメインを記述
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = rikeda-cloud.com
+DNS.2 = www.rikeda-cloud.com
+```
+4. Dockerコンテナを作成し、Dockerfile内で作成した`/etc/nginx/certs/server.crt`と`/etc/nginx/certs/ca.crt`ファイルをホスト側にコピーする
+```
+docker cp <コンテナ名>:/etc/nginx/certs/server.crt
+docker cp <コンテナ名>:/etc/nginx/certs/ca.crt
+```
+5. ホストOS側に証明書を登録する
+```
+sudo cp server.crt ca.crt /etc/pki/ca-trust/source/anchors/
+sudo update-ca-trust 
+```
+6. Chromeに証明書を登録する
+```
+chrome://settings/certificates にアクセス
+サーバの欄のインポートで server.crt ファイルを選択
+認証局の欄のインポートで ca.crt ファイルを選択
+コンテナで公開しているWebサービスにアクセス
+```
