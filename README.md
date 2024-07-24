@@ -306,35 +306,39 @@ restart
 
 # NGINXでTLSの設定
 ```
-1. Dockerファイル内でopensslコマンドで必要な秘密鍵・CSR・証明書を作成する
-FROM alpine:latest
+FROM debian
 
-RUN apk update && \
-        apk upgrade && \
-        apk add bash nginx openssl
+RUN apt-get -y update && \
+        apt-get -y upgrade && \
+        apt-get -y install bash nginx openssl systemd systemd-sysv
 
 RUN mkdir /etc/nginx/certs
 COPY ./conf/openssl.cnf /etc/nginx/certs/
 COPY ./conf/nginx.conf /etc/nginx/
 COPY ./tools/index.html /var/www/html/
 
-# 秘密鍵の作成
-RUN openssl genrsa -out /etc/nginx/certs/ca.key 2048 // 認証局の秘密鍵
-RUN openssl genrsa -out /etc/nginx/certs/server.key 2048 // Webサーバの秘密鍵
+# 秘密鍵の作成(オレオレ認証局とWebサーバ用)
+RUN openssl genrsa -out /etc/nginx/certs/ca.key 2048
+RUN openssl genrsa -out /etc/nginx/certs/server.key 2048
 # CSR（証明書署名要求）の作成
-RUN openssl req -new -key /etc/nginx/certs/server.key -out /etc/nginx/certs/server.csr -config /etc/nginx/certs/openssl.cnf // WebサーバのCSR
-# CRT（SSLサーバ証明書）の作成
-RUN openssl req -new -x509 -days 365 -key /etc/nginx/certs/ca.key -out /etc/nginx/certs/ca.crt -subj "/C=JP/ST=Tokyo/L=Minato/O=Example/OU=IT/CN=Example CA" // 認証局の証明書
-RUN openssl x509 -req -days 365 -in /etc/nginx/certs/server.csr -CA /etc/nginx/certs/ca.crt -CAkey /etc/nginx/certs/ca.key -CAcreateserial -out　/etc/nginx/certs/server.crt -extfile /etc/nginx/certs/openssl.cnf -extensions req_ext // Webサーバの証明書
+RUN openssl req -new -key /etc/nginx/certs/server.key -out /etc/nginx/certs/server.csr -config /etc/nginx/certs/openssl.cnf
+# CRT（証明書）の作成(オレオレ認証局とWebサーバ用)
+# TODO 認証局用のopenssl.cnfを作成してもよいかも
+RUN openssl req -new -x509 -days 365 -key /etc/nginx/certs/ca.key -out /etc/nginx/certs/ca.crt -subj "/C=JP/ST=Tokyo/L=Minato/O=Example/OU=IT/CN=Example CA"
+RUN openssl x509 -req -days 365 -in /etc/nginx/certs/server.csr -CA /etc/nginx/certs/ca.crt -CAkey /etc/nginx/certs/ca.key -CAcreateserial -out /etc/nginx/certs/server.crt -extfile /etc/nginx/certs/openssl.cnf -extensions req_ext
 
-ENTRYPOINT /usr/sbin/nginx -g 'daemon off;' -c /etc/nginx/nginx.conf
+RUN systemctl enable nginx
+
+ENTRYPOINT ["/usr/lib/systemd/systemd"]
 ```
 2. nginx.confファイル内でTLSを使用するための設定を記述する
 ```
 worker_processes  1;
+
 events {
     worker_connections  1024;
 }
+
 http {
     include       mime.types;
     default_type  application/octet-stream;
@@ -342,14 +346,19 @@ http {
     keepalive_timeout  65;
 
     server {
-        listen       443 ssl; // sslとすることで暗号化通信
-        server_name  rikeda-cloud.com; // server_nameは証明書に載せる情報と同じものにする
+        listen       443 ssl http2;
+        server_name  rikeda.42.fr;
         root /var/www/html/;
-        ssl_certificate /etc/nginx/certs/server.crt; // Dockerfileで作成したcrtファイルを指定
-        ssl_certificate_key /etc/nginx/certs/server.key; // DOckerfile内で作成したWebサーバ用の秘密鍵ファイルを指定
+        ssl_certificate /etc/nginx/certs/server.crt;
+        ssl_certificate_key /etc/nginx/certs/server.key;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers off;
+        ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384';
+        http2_max_field_size 16k;
+        http2_max_header_size 16k;
 
         location / {
-                        index index.html;
+            index index.html;
         }
     }
 }
@@ -362,7 +371,7 @@ default_keyfile     = server.key
 distinguished_name = req_distinguished_name
 req_extensions      = req_ext
 x509_extensions     = v3_ca
-prompt = no // Dockerfile内でCSRを作成する時に対話形式だとエラーになる
+prompt = no
 
 [req_distinguished_name]
 C = JP
@@ -370,7 +379,7 @@ ST = Minato
 L = Shinjuku
 O = 42tokyo
 OU = IT
-CN = rikeda-cloud.com // 使用したいドメインを記述
+CN = rikeda.42.fr
 
 [ req_ext ]
 subjectAltName = @alt_names
@@ -378,6 +387,12 @@ subjectAltName = @alt_names
 [ alt_names ]
 DNS.1 = rikeda-cloud.com
 DNS.2 = www.rikeda-cloud.com
+
+[ v3_ca ]
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer:always
+basicConstraints=CA:TRUE
+keyUsage = keyCertSign, cRLSign
 ```
 4. Dockerコンテナを作成し、Dockerfile内で作成した`/etc/nginx/certs/server.crt`と`/etc/nginx/certs/ca.crt`ファイルをホスト側にコピーする
 ```
