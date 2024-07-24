@@ -4,15 +4,16 @@ services:
   nginx:
     stdin_open: true
     tty: true
+    restart: always
     build:
       context: ./requirements/nginx/
     ports:
-      - 8081:80
+      - 443:443
     container_name: nginx
 
-  mariadb:
-    stdin_open: true
-    tty: true
-    build:
-      context: ./requirements/mariadb/
-    container_name: mariadb
+  # mariadb:
+  #   stdin_open: true
+  #   tty: true
+  #   build:
+  #     context: ./requirements/mariadb/
+  #   container_name: mariadb
