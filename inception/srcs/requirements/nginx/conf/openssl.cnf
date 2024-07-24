@@ -12,7 +12,7 @@ ST = Minato
 L = Shinjuku
 O = 42tokyo
 OU = IT
-CN = rikeda-cloud.com
+CN = rikeda.42.fr
 
 [ req_ext ]
 subjectAltName = @alt_names
