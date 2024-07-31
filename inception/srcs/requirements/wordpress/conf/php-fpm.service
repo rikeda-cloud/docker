@@ -1,0 +1,14 @@
+[Unit]
+Description=The PHP FastCGI Process Manager
+Documentation=man:php-fpm(8)
+After=network.target
+
+[Service]
+Type=simple
+PIDFile=/run/php/php-fpm.pid
+ExecStart=/usr/sbin/php-fpm8.2 --nodaemonize --fpm-config /etc/php/8.2/fpm/php-fpm.conf
+ExecReload=/bin/kill -USR2 $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

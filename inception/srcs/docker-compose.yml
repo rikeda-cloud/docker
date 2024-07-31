@@ -14,6 +14,10 @@ services:
       - /tmp
       - /run
     privileged: true
+    depends_on:
+      - wordpress
+    networks:
+      - nginx_wordpress
 
   mariadb:
     stdin_open: true
@@ -28,3 +32,22 @@ services:
       - /tmp
       - /run
     privileged: true
+
+  wordpress:
+    stdin_open: true
+    tty: true
+    restart: always
+    build:
+      context: ./requirements/wordpress/
+    # ports:
+    #   - 9000:9000
+    container_name: wordpress
+    networks:
+      - nginx_wordpress
+    # tmpfs:
+    #   - /tmp
+    #   - /run
+    # privileged: true
+
+networks:
+  nginx_wordpress:
