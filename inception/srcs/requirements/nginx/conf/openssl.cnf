@@ -18,8 +18,8 @@ CN = rikeda.42.fr
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.1 = rikeda-cloud.com
-DNS.2 = www.rikeda-cloud.com
+DNS.1 = rikeda.42.fr
+DNS.2 = www.rikeda.42.fr
 
 [ v3_ca ]
 subjectKeyIdentifier=hash
