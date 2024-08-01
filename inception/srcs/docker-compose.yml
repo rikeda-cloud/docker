@@ -53,10 +53,10 @@ services:
       - nginx_wordpress
     volumes:
       - wordpress-volume:/var/www/html/
-    # tmpfs:
-    #   - /tmp
-    #   - /run
-    # privileged: true
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
 
 networks:
   wordpress_mariadb:

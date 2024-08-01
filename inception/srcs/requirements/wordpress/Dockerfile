@@ -18,6 +18,7 @@ RUN apt-get -y update && \
 	systemd \
 	systemd-sysv
 
+# WordPressをダウンロード
 RUN wget https://wordpress.org/latest.zip && \
 	unzip latest.zip && \
 	mv wordpress/* /var/www/html && \
@@ -28,12 +29,10 @@ RUN wget https://wordpress.org/latest.zip && \
 RUN mkdir -p /run/php && \
 	chown -R www-data:www-data /run/php
 
-WORKDIR /var/www/html/
 COPY ./conf/wp-config.php /var/www/html/
 COPY ./conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
+COPY ./conf/php-fpm.service /etc/systemd/system/php-fpm.service
+
+RUN systemctl enable php-fpm
 EXPOSE 9000
-# COPY ./conf/php-fpm.service /etc/systemd/system/php-fpm.service
-# RUN systemctl enable php-fpm
-# ENTRYPOINT ["/usr/lib/systemd/systemd"]
-ENTRYPOINT ["php-fpm8.2", "-F"]
-# ENTRYPOINT ["php", "-S", "0.0.0.0:9000"]
+ENTRYPOINT ["/usr/lib/systemd/systemd"]
