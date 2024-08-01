@@ -19,7 +19,7 @@ services:
     networks:
       - nginx_wordpress
     volumes:
-      - wordpress-volume:/var/www/html/
+      - wordpress-volume:/var/www/html/wordpress/
 
   mariadb:
     stdin_open: true
@@ -27,8 +27,6 @@ services:
     restart: always
     build:
       context: ./requirements/mariadb/
-    ports:
-      - 3306:3306
     container_name: mariadb
     tmpfs:
       - /tmp
@@ -36,6 +34,8 @@ services:
     privileged: true
     networks:
       - wordpress_mariadb
+    volumes:
+      - wordpress-db-volume:/var/lib/mysql/
 
   wordpress:
     stdin_open: true
@@ -43,8 +43,6 @@ services:
     restart: always
     build:
       context: ./requirements/wordpress/
-    ports:
-      - 9000:9000
     container_name: wordpress
     depends_on:
       - mariadb
@@ -52,7 +50,7 @@ services:
       - wordpress_mariadb
       - nginx_wordpress
     volumes:
-      - wordpress-volume:/var/www/html/
+      - wordpress-volume:/var/www/html/wordpress/
     tmpfs:
       - /tmp
       - /run
@@ -64,4 +62,14 @@ networks:
 
 volumes:
   wordpress-volume:
-    name: wordpress-volume
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOME}/data/wordpress
+  wordpress-db-volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOME}/data/mariadb
