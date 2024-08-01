@@ -11,6 +11,14 @@ RUN apt-get -y update && \
 
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
+RUN service mariadb start && \
+	until mysqladmin ping -uroot --silent; do echo waiting for mariadb; sleep 1; done && \
+	mariadb -uroot -e "CREATE DATABASE IF NOT EXISTS wordpress;" && \
+	mariadb -uroot -e "CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED BY 'wordpress';" && \
+	mariadb -uroot -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';" && \
+	mariadb -uroot -e "FLUSH PRIVILEGES;" && \
+	service mariadb stop
+
 EXPOSE 3306
 RUN systemctl enable mariadb
 ENTRYPOINT ["/usr/lib/systemd/systemd"]
