@@ -27,6 +27,7 @@ RUN mkdir -p /run/php && \
 	chown -R www-data:www-data /run/php
 
 WORKDIR /var/www/html/wordpress/
+COPY ./conf/wp-config.php /var/www/html/wordpress/
 # COPY ./conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 EXPOSE 9000
 # COPY ./conf/php-fpm.service /etc/systemd/system/php-fpm.service
