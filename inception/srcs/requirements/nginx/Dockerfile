@@ -7,7 +7,6 @@ RUN apt-get -y update && \
 RUN mkdir /etc/nginx/certs
 COPY ./conf/openssl.cnf /etc/nginx/certs/
 COPY ./conf/nginx.conf /etc/nginx/
-COPY ./tools/index.html /var/www/html/
 
 # 秘密鍵の作成(オレオレ認証局とWebサーバ用)
 RUN openssl genrsa -out /etc/nginx/certs/ca.key 2048

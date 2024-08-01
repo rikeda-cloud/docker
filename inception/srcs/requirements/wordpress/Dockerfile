@@ -20,15 +20,16 @@ RUN apt-get -y update && \
 
 RUN wget https://wordpress.org/latest.zip && \
 	unzip latest.zip && \
+	mv wordpress/* /var/www/html && \
 	rm latest.zip && \
-	mv wordpress /var/www/html && \
-	chown -R www-data:www-data /var/www/html/wordpress
+	rm -r wordpress && \
+	chown -R www-data:www-data /var/www/html
 
 RUN mkdir -p /run/php && \
 	chown -R www-data:www-data /run/php
 
-WORKDIR /var/www/html/wordpress/
-COPY ./conf/wp-config.php /var/www/html/wordpress/
+WORKDIR /var/www/html/
+COPY ./conf/wp-config.php /var/www/html/
 COPY ./conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 EXPOSE 9000
 # COPY ./conf/php-fpm.service /etc/systemd/system/php-fpm.service
