@@ -18,11 +18,18 @@ services:
     depends_on:
       wordpress:
         condition: service_healthy
+      rust:
+        condition: service_healthy
     networks:
       - nginx_wordpress
       - nginx_rust
     volumes:
       - wordpress-volume:/var/www/html/wordpress/
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "https://127.0.0.1/"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
 
   mariadb:
     stdin_open: true
