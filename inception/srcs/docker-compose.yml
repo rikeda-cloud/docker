@@ -20,6 +20,7 @@ services:
         condition: service_healthy
     networks:
       - nginx_wordpress
+      - nginx_rust
     volumes:
       - wordpress-volume:/var/www/html/wordpress/
 
@@ -71,9 +72,30 @@ services:
       timeout: 10s
       retries: 10
 
+  rust:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: rust
+    build:
+      context: ./requirements/rust/
+    container_name: rust
+    networks:
+      - nginx_rust
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "http://127.0.0.1:3000/"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
 networks:
   wordpress_mariadb:
   nginx_wordpress:
+  nginx_rust:
 
 volumes:
   wordpress-volume:
