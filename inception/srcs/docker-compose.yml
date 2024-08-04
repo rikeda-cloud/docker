@@ -16,7 +16,8 @@ services:
       - /run
     privileged: true
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
     networks:
       - nginx_wordpress
     volumes:
@@ -38,6 +39,11 @@ services:
       - wordpress_mariadb
     volumes:
       - wordpress-db-volume:/var/lib/mysql/
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
 
   wordpress:
     stdin_open: true
@@ -48,7 +54,8 @@ services:
       context: ./requirements/wordpress/
     container_name: wordpress
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     networks:
       - wordpress_mariadb
       - nginx_wordpress
@@ -58,6 +65,11 @@ services:
       - /tmp
       - /run
     privileged: true
+    healthcheck:
+      test: ["CMD", "pgrep", "php-fpm"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
 
 networks:
   wordpress_mariadb:
