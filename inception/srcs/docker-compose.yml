@@ -20,9 +20,12 @@ services:
         condition: service_healthy
       rust:
         condition: service_healthy
+      adminer:
+        condition: service_healthy
     networks:
       - nginx_wordpress
       - nginx_rust
+      - nginx_adminer
     volumes:
       - wordpress-volume:/var/www/html/wordpress/
     healthcheck:
@@ -45,6 +48,7 @@ services:
     privileged: true
     networks:
       - wordpress_mariadb
+      - adminer_mariadb
     volumes:
       - wordpress-db-volume:/var/lib/mysql/
     healthcheck:
@@ -122,11 +126,34 @@ services:
     networks:
       - wordpress_redis
 
+  adminer:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: adminer
+    build:
+      context: ./requirements/adminer/
+    container_name: adminer
+    networks:
+      - nginx_adminer
+      - adminer_mariadb
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "http://127.0.0.1:5000/"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
 networks:
   wordpress_mariadb:
   nginx_wordpress:
   nginx_rust:
   wordpress_redis:
+  nginx_adminer:
+  adminer_mariadb:
 
 volumes:
   wordpress-volume:

@@ -1,0 +1,11 @@
+[Unit]
+Description=PHP Adminer Server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/php -S 0.0.0.0:5000 -t /var/www/html
+WorkingDirectory=/var/www/html
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
