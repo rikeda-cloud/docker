@@ -1,0 +1,11 @@
+[Unit]
+Description=Rust Web Application
+After=network.target
+
+[Service]
+ExecStart=/usr/src/rust/target/release/rust
+WorkingDirectory=/usr/src/rust/target/release
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
