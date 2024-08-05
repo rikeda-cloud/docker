@@ -9,6 +9,7 @@ RUN apt-get -y update && \
 	php-curl \
 	php-mysql \
 	php-mbstring \
+	php-redis \
 	zip \
 	unzip \
 	wget \

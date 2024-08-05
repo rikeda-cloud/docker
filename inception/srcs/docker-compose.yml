@@ -64,9 +64,12 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - wordpress_mariadb
       - nginx_wordpress
+      - wordpress_redis
     volumes:
       - wordpress-volume:/var/www/html/wordpress/
     tmpfs:
@@ -99,10 +102,31 @@ services:
       timeout: 10s
       retries: 10
 
+  redis:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: redis
+    build:
+      context: ./requirements/redis/
+    container_name: redis
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+    networks:
+      - wordpress_redis
+
 networks:
   wordpress_mariadb:
   nginx_wordpress:
   nginx_rust:
+  wordpress_redis:
 
 volumes:
   wordpress-volume:
