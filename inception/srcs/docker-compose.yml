@@ -147,6 +147,30 @@ services:
       timeout: 10s
       retries: 10
 
+  ftp:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: ftp
+    build:
+      context: ./requirements/ftp/
+    container_name: ftp
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    ports:
+      - 21:21
+      - 10000-10100:10000-10100
+    healthcheck:
+      test: ["CMD", "telnet", "localhost", "21"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - wordpress-volume:/var/www/html/
+
+
 networks:
   wordpress_mariadb:
   nginx_wordpress:
