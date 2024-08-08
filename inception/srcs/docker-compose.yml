@@ -170,6 +170,27 @@ services:
     volumes:
       - wordpress-volume:/var/www/html/
 
+  dns:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: dns
+    build:
+      context: ./requirements/dns/
+    container_name: dns
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    ports:
+      - "6000:53/tcp"
+      - "6000:53/udp"
+    healthcheck:
+      test: ["CMD", "dig", "@localhost", "rikeda.42.fr"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
 
 networks:
   wordpress_mariadb:
