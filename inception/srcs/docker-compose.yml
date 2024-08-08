@@ -213,8 +213,6 @@ services:
     depends_on:
       exporter:
         condition: service_healthy
-    ports:
-      - 9090:9090
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:9090"]
       interval: 1s
@@ -256,7 +254,6 @@ networks:
   nginx_exporter:
   exporter_prometheus:
   grafana_prometheus:
-    driver: bridge
 
 volumes:
   wordpress-volume:

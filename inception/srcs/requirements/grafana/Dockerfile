@@ -10,9 +10,10 @@ RUN apt-get -y update && \
 	systemd \
 	systemd-sysv
 
-RUN curl -fsSL https://apt.grafana.com/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/grafana.gpg > /dev/null
-RUN echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | tee -a /etc/apt/sources.list.d/grafana.list
-RUN apt-get -y update && apt-get -y install grafana
+RUN curl -fsSL https://apt.grafana.com/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/grafana.gpg > /dev/null && \
+	echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | tee -a /etc/apt/sources.list.d/grafana.list && \
+	apt-get -y update && \
+	apt-get -y install grafana
 
 RUN systemctl enable grafana-server
 
