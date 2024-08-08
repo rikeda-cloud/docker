@@ -2,7 +2,7 @@ FROM debian
 
 RUN apt-get -y update && \
 	apt-get -y upgrade && \
-	apt-get -y install bash nginx openssl curl systemd systemd-sysv
+	apt-get -y install bash nginx nginx-core curl systemd systemd-sysv
 
 RUN mkdir /etc/nginx/certs
 COPY ./conf/nginx.conf /etc/nginx/

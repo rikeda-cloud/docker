@@ -26,11 +26,12 @@ services:
       - nginx_wordpress
       - nginx_rust
       - nginx_adminer
+      - nginx_exporter
     volumes:
       - wordpress-volume:/var/www/html/wordpress/
     healthcheck:
-      test: ["CMD", "curl", "--silent", "https://127.0.0.1/"]
-      interval: 1s
+      test: ["CMD", "curl", "-k", "--silent", "https://localhost:443/"]
+      interval: 10s
       timeout: 10s
       retries: 10
 
@@ -170,6 +171,80 @@ services:
     volumes:
       - wordpress-volume:/var/www/html/
 
+  exporter:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: exporter
+    build:
+      context: ./requirements/exporter/
+    container_name: exporter
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    networks:
+      - nginx_exporter
+      - exporter_prometheus
+    depends_on:
+      nginx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:9113/metrics"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
+  prometheus:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: prometheus
+    build:
+      context: ./requirements/prometheus/
+    container_name: prometheus
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    networks:
+      - exporter_prometheus
+      - grafana_prometheus
+    depends_on:
+      exporter:
+        condition: service_healthy
+    ports:
+      - 9090:9090
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "http://localhost:9090"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
+  grafana:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: grafana
+    build:
+      context: ./requirements/grafana/
+    container_name: grafana
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "http://localhost:3000"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+    networks:
+      - grafana_prometheus
 
 networks:
   wordpress_mariadb:
@@ -178,6 +253,10 @@ networks:
   wordpress_redis:
   nginx_adminer:
   adminer_mariadb:
+  nginx_exporter:
+  exporter_prometheus:
+  grafana_prometheus:
+    driver: bridge
 
 volumes:
   wordpress-volume:
