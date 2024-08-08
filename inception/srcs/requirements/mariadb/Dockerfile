@@ -19,6 +19,5 @@ RUN service mariadb start && \
 	mariadb -uroot -e "FLUSH PRIVILEGES;" && \
 	service mariadb stop
 
-EXPOSE 3306
 RUN systemctl enable mariadb
 ENTRYPOINT ["/usr/lib/systemd/systemd"]
