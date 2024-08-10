@@ -15,6 +15,10 @@ RUN curl -fsSL https://apt.grafana.com/gpg.key | gpg --dearmor | tee /etc/apt/ke
 	apt-get -y update && \
 	apt-get -y install grafana
 
+COPY ./conf/dashboard.yml /etc/grafana/provisioning/dashboards/
+COPY ./conf/datasource.yml /etc/grafana/provisioning/datasources/
+COPY ./conf/nginx-prometheus-exporter.json /var/lib/grafana/dashboards/
+
 RUN systemctl enable grafana-server
 
 ENTRYPOINT ["/usr/lib/systemd/systemd"]
