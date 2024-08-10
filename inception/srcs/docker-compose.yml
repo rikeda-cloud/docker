@@ -27,6 +27,7 @@ services:
       - nginx_rust
       - nginx_adminer
       - nginx_exporter
+      - nginx_k6
     volumes:
       - wordpress-volume:/var/www/html/wordpress/
     healthcheck:
@@ -244,6 +245,29 @@ services:
     networks:
       - grafana_prometheus
 
+  k6:
+    stdin_open: true
+    tty: true
+    restart: always
+    image: k6
+    build:
+      context: ./requirements/k6/
+    container_name: k6
+    tmpfs:
+      - /tmp
+      - /run
+    privileged: true
+    depends_on:
+      nginx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-k", "--silent", "https://nginx:443/"]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+    networks:
+      - nginx_k6
+
 networks:
   wordpress_mariadb:
   nginx_wordpress:
@@ -254,6 +278,7 @@ networks:
   nginx_exporter:
   exporter_prometheus:
   grafana_prometheus:
+  nginx_k6:
 
 volumes:
   wordpress-volume:
