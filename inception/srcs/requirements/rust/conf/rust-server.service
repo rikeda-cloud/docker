@@ -3,8 +3,8 @@ Description=Rust Web Application
 After=network.target
 
 [Service]
-ExecStart=/usr/src/rust/target/release/rust
-WorkingDirectory=/usr/src/rust/target/release
+ExecStart=/usr/local/bin/rust-server
+WorkingDirectory=/usr/local/bin
 Restart=always
 
 [Install]
