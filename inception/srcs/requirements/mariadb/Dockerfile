@@ -3,14 +3,13 @@ FROM debian
 RUN apt-get -y update && \
 	apt-get -y upgrade && \
 	apt-get -y install \
-	bash \
-	systemd \
-	systemd-sysv \
 	mariadb-server \
-	mariadb-client
+	systemd \
+	systemd-sysv 
 
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
+# mariadbの初期設定
 RUN service mariadb start && \
 	until mysqladmin ping -uroot --silent; do echo waiting for mariadb; sleep 1; done && \
 	mariadb -uroot -e "CREATE DATABASE IF NOT EXISTS wordpress;" && \
