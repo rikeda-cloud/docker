@@ -32,9 +32,9 @@ services:
       - wordpress-volume:/var/www/html/wordpress/
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://localhost:443/"]
-      interval: 10s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
 
   mariadb:
     stdin_open: true
@@ -55,9 +55,9 @@ services:
       - wordpress-db-volume:/var/lib/mysql/
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "--silent"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
 
   wordpress:
     stdin_open: true
@@ -84,9 +84,9 @@ services:
     privileged: true
     healthcheck:
       test: ["CMD", "pgrep", "php-fpm"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
 
   rust:
     stdin_open: true
@@ -104,9 +104,9 @@ services:
     privileged: true
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://127.0.0.1:3000/"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
 
   redis:
     stdin_open: true
@@ -122,9 +122,9 @@ services:
     privileged: true
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
     networks:
       - wordpress_redis
 
@@ -145,9 +145,9 @@ services:
     privileged: true
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://127.0.0.1:5000/"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
 
   ftp:
     stdin_open: true
@@ -166,9 +166,9 @@ services:
       - 10000-10100:10000-10100
     healthcheck:
       test: ["CMD", "telnet", "localhost", "21"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
     volumes:
       - wordpress-volume:/var/www/html/
 
@@ -192,9 +192,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "http://localhost:9113/metrics"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
 
   prometheus:
     stdin_open: true
@@ -216,9 +216,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:9090"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
 
   grafana:
     stdin_open: true
@@ -239,9 +239,9 @@ services:
       - 3000:3000
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:3000"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
     networks:
       - grafana_prometheus
 
@@ -262,9 +262,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://nginx:443/"]
-      interval: 1s
+      interval: 2s
       timeout: 10s
-      retries: 10
+      retries: 5
     networks:
       - nginx_k6
 
