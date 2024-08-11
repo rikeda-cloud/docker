@@ -3,7 +3,6 @@ FROM debian
 RUN apt-get -y update && \
 	apt-get -y upgrade && \
 	apt-get -y install \
-	bash \
 	php \
 	php-fpm \
 	php-curl \
@@ -12,7 +11,6 @@ RUN apt-get -y update && \
 	php-redis \
 	zip \
 	unzip \
-	wget \
 	curl \
 	systemd \
 	systemd-sysv && \
@@ -36,5 +34,4 @@ COPY ./conf/wp-cli-setup.service /etc/systemd/system/
 
 RUN systemctl enable php8.2-fpm
 RUN systemctl enable wp-cli-setup
-
 ENTRYPOINT ["/usr/lib/systemd/systemd"]
