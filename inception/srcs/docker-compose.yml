@@ -103,7 +103,7 @@ services:
       - /run
     privileged: true
     healthcheck:
-      test: ["CMD", "curl", "--silent", "http://127.0.0.1:3000/"]
+      test: ["CMD", "curl", "--silent", "http://127.0.0.1:4000/"]
       interval: 2s
       timeout: 10s
       retries: 5
