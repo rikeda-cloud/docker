@@ -3,7 +3,6 @@ FROM debian
 RUN apt-get -y update && \
 	apt-get -y upgrade && \
 	apt-get -y install \
-	bash \
 	curl \
 	apt-transport-https \
 	software-properties-common \
@@ -17,11 +16,10 @@ RUN gpg -k && \
 	apt-get update && \
 	apt-get install k6
 
-
+# 負荷テスト用のスクリプトを用意
 RUN mkdir -p /etc/k6/scripts/
 COPY ./tools/test.js /etc/k6/scripts/
+
 COPY ./conf/k6.service /etc/systemd/system/
-
 RUN systemctl enable k6
-
 ENTRYPOINT ["/usr/lib/systemd/systemd"]
