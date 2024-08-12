@@ -1,7 +1,7 @@
 FROM debian:bullseye
 
 RUN apt-get update && apt-get -y install \
-	telnet \
+	ftp \
 	vsftpd \
 	systemd \
 	systemd-sysv && \

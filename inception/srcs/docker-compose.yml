@@ -165,7 +165,7 @@ services:
       - 21:21
       - 10000-10100:10000-10100
     healthcheck:
-      test: ["CMD", "telnet", "localhost", "21"]
+      test: ["CMD", "ftp", "localhost"]
       interval: 2s
       timeout: 10s
       retries: 5
