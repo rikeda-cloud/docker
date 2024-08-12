@@ -1,11 +1,10 @@
 FROM debian:bullseye
 
 RUN apt-get update && apt-get -y install \
-	curl \
 	apt-transport-https \
-	# software-properties-common \
-	gpg \
+	curl \
 	dirmngr \
+	gpg \
 	systemd \
 	systemd-sysv
 

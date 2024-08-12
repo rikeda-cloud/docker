@@ -2,9 +2,9 @@ FROM debian:bullseye
 
 RUN apt-get update && apt-get -y install \
 	bash \
+	curl \
 	nginx \
 	nginx-core \
-	curl \
 	systemd \
 	systemd-sysv && \
 	rm -rf /var/lib/apt/lists/*

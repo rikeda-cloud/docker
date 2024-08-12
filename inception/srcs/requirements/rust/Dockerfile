@@ -2,10 +2,10 @@
 FROM debian:bullseye AS build
 
 RUN apt-get update && apt-get -y install \
-	curl \
 	build-essential \
-	gcc \
-	cmake && \
+	cmake \
+	curl \
+	gcc && \
 	rm -rf /var/lib/apt/lists/*
 
 # Rustをインストール

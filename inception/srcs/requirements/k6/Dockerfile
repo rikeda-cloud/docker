@@ -1,8 +1,8 @@
 FROM debian:bullseye
 
 RUN apt-get update && apt-get -y install \
-	curl \
 	apt-transport-https \
+	curl \
 	gnupg \
 	systemd \
 	systemd-sysv
