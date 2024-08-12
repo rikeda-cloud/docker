@@ -13,10 +13,8 @@ RUN apt-get -y update && \
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 # Rustでビルド
-RUN mkdir -p /usr/src/rust-server/src/
+COPY ./tools/rust-server/ /usr/src/rust-server
 WORKDIR /usr/src/rust-server
-COPY ./conf/Cargo.toml ./
-COPY ./tools/main.rs ./src/
 RUN /root/.cargo/bin/cargo build --release
 
 # 本番用ステージ
