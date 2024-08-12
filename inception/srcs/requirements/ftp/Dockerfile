@@ -1,21 +1,20 @@
-FROM debian
+FROM debian:oldstable
 
-RUN apt-get -y update && \
-	apt-get -y upgrade && \
-	apt-get -y install \
+RUN apt-get update && apt-get -y install \
 	telnet \
 	vsftpd \
 	systemd \
-	systemd-sysv
-
-COPY ./conf/vsftpd.conf /etc/
-RUN mkdir -p /var/www/html
+	systemd-sysv && \
+	rm -rf /var/lib/apt/lists/*
 
 # FTP操作用のユーザーとなるftpuserを作成
-RUN useradd ftpuser -d /var/www/html
-RUN echo "ftpuser:ftpuser_password" | chpasswd
-RUN chmod -R 755 /var/www/html
-RUN chown -R ftpuser:ftpuser /var/www/html
+RUN mkdir -p /var/www/html && \
+	useradd ftpuser -d /var/www/html && \
+	echo "ftpuser:ftpuser_password" | chpasswd && \
+	chmod -R 755 /var/www/html && \
+	chown -R ftpuser:ftpuser /var/www/html
+
+COPY ./conf/vsftpd.conf /etc/
 
 RUN systemctl enable vsftpd
-ENTRYPOINT ["/usr/lib/systemd/systemd"]
+ENTRYPOINT ["/bin/systemd"]

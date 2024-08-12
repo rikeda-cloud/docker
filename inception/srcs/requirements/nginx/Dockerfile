@@ -1,8 +1,13 @@
-FROM debian
+FROM debian:oldstable
 
-RUN apt-get -y update && \
-	apt-get -y upgrade && \
-	apt-get -y install bash nginx nginx-core curl systemd systemd-sysv
+RUN apt-get update && apt-get -y install \
+	bash \
+	nginx \
+	nginx-core \
+	curl \
+	systemd \
+	systemd-sysv && \
+	rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /etc/nginx/certs
 COPY ./conf/nginx.conf /etc/nginx/
@@ -11,4 +16,4 @@ COPY ./tools/server.key /etc/nginx/certs/
 
 RUN systemctl enable nginx
 
-ENTRYPOINT ["/usr/lib/systemd/systemd"]
+ENTRYPOINT ["/bin/systemd"]

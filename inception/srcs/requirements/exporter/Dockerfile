@@ -1,11 +1,10 @@
-FROM debian
+FROM debian:oldstable
 
-RUN apt-get -y update && \
-	apt-get -y upgrade && \
-	apt-get -y install \
+RUN apt-get update && apt-get -y install \
 	curl \
 	systemd \
-	systemd-sysv
+	systemd-sysv && \
+	rm -rf /var/lib/apt/lists/*
 
 # アーキテクチャに合わせてnginx-prometheus-exporterをダウンロード
 RUN if [ "$(uname -m)" = "aarch64" ]; then \
@@ -19,4 +18,4 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
 
 COPY ./conf/exporter.service /etc/systemd/system/
 RUN systemctl enable exporter
-ENTRYPOINT ["/usr/lib/systemd/systemd"]
+ENTRYPOINT ["/bin/systemd"]

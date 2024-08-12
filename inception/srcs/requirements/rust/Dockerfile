@@ -1,13 +1,12 @@
 # ビルドステージ
-FROM debian AS build
+FROM debian:oldstable AS build
 
-RUN apt-get -y update && \
-	apt-get -y upgrade && \
-	apt-get -y install \
+RUN apt-get update && apt-get -y install \
 	curl \
 	build-essential \
 	gcc \
-	cmake
+	cmake && \
+	rm -rf /var/lib/apt/lists/*
 
 # Rustをインストール
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -18,18 +17,17 @@ WORKDIR /usr/src/rust-server
 RUN /root/.cargo/bin/cargo build --release
 
 # 本番用ステージ
-FROM debian AS production
+FROM debian:oldstable AS production
 
-RUN apt-get -y update && \
-	apt-get -y upgrade && \
-	apt-get -y install \
+RUN apt-get update && apt-get -y install \
 	curl \
 	systemd \
-	systemd-sysv
+	systemd-sysv && \
+	rm -rf /var/lib/apt/lists/*
 
 # ビルドステージでビルドしたバイナリをCOPY
 COPY --from=build /usr/src/rust-server/target/release/rust-server /usr/local/bin
 
 COPY ./conf/rust-server.service /etc/systemd/system/
 RUN systemctl enable rust-server
-ENTRYPOINT ["/usr/lib/systemd/systemd"]
+ENTRYPOINT ["/bin/systemd"]

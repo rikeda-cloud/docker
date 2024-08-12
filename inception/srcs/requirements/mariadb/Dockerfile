@@ -1,11 +1,10 @@
-FROM debian
+FROM debian:oldstable
 
-RUN apt-get -y update && \
-	apt-get -y upgrade && \
-	apt-get -y install \
+RUN apt-get update && apt-get -y install \
 	mariadb-server \
 	systemd \
-	systemd-sysv 
+	systemd-sysv && \
+	rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
@@ -19,4 +18,4 @@ RUN service mariadb start && \
 	service mariadb stop
 
 RUN systemctl enable mariadb
-ENTRYPOINT ["/usr/lib/systemd/systemd"]
+ENTRYPOINT ["/bin/systemd"]

@@ -1,8 +1,6 @@
-FROM debian
+FROM debian:oldstable
 
-RUN apt-get -y update && \
-	apt-get -y upgrade && \
-	apt-get -y install \
+RUN apt-get update && apt-get -y install \
 	php \
 	php-fpm \
 	php-curl \
@@ -15,7 +13,8 @@ RUN apt-get -y update && \
 	systemd \
 	systemd-sysv && \
 	apt-get -y remove --purge apache2 && \
-	apt-get -y autoremove
+	apt-get -y autoremove && \
+	rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /var/www/html
 
@@ -29,14 +28,14 @@ COPY ./tools/init_wordpress.sh /root/
 RUN chmod +x /root/init_wordpress.sh
 
 # 日本語でダウンロード
-RUN wp core download --path=/var/www/html/wordpress --locale=ja --allow-root
-RUN chmod -R 777 /var/www/html/wordpress
+RUN wp core download --path=/var/www/html/wordpress --locale=ja --allow-root && \
+	chmod -R 777 /var/www/html/wordpress
 
 # 設定ファイル等をコピー
-COPY ./conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY ./conf/wp-cli-setup.service /etc/systemd/system/
 
-RUN systemctl enable php8.2-fpm
+RUN systemctl enable php7.4-fpm
 RUN systemctl enable wp-cli-setup
 
-ENTRYPOINT ["/usr/lib/systemd/systemd"]
+ENTRYPOINT ["/bin/systemd"]
