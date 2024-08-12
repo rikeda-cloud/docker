@@ -161,9 +161,9 @@ services:
       - /tmp
       - /run
     privileged: true
-    ports:
-      - 21:21
-      - 10000-10100:10000-10100
+    networks:
+      ftp_bridge:
+        ipv4_address: 172.30.0.2
     healthcheck:
       test: ["CMD", "telnet", "localhost", "21"]
       interval: 2s
@@ -279,6 +279,11 @@ networks:
   exporter_prometheus:
   grafana_prometheus:
   nginx_k6:
+  ftp_bridge:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24
 
 volumes:
   wordpress-volume:
