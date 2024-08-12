@@ -28,10 +28,14 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 COPY ./tools/init_wordpress.sh /root/
 RUN chmod +x /root/init_wordpress.sh
 
+# 日本語でダウンロード
+RUN wp core download --path=/var/www/html/wordpress --locale=ja --allow-root
+
 # 設定ファイル等をコピー
 COPY ./conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 COPY ./conf/wp-cli-setup.service /etc/systemd/system/
 
 RUN systemctl enable php8.2-fpm
 RUN systemctl enable wp-cli-setup
+
 ENTRYPOINT ["/usr/lib/systemd/systemd"]

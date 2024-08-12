@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# 日本語でダウンロード
-wp core download --path=/var/www/html/wordpress --locale=ja --allow-root
-
 cd /var/www/html/wordpress
 
 # configファイルの作成
