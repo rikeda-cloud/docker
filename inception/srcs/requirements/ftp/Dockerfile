@@ -1,4 +1,4 @@
-FROM debian:oldstable
+FROM debian:bullseye
 
 RUN apt-get update && apt-get -y install \
 	telnet \

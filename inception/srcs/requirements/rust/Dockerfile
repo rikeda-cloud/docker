@@ -1,5 +1,5 @@
 # ビルドステージ
-FROM debian:oldstable AS build
+FROM debian:bullseye AS build
 
 RUN apt-get update && apt-get -y install \
 	curl \
@@ -17,7 +17,7 @@ WORKDIR /usr/src/rust-server
 RUN /root/.cargo/bin/cargo build --release
 
 # 本番用ステージ
-FROM debian:oldstable AS production
+FROM debian:bullseye AS production
 
 RUN apt-get update && apt-get -y install \
 	curl \
