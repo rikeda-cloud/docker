@@ -30,6 +30,7 @@ RUN chmod +x /root/init_wordpress.sh
 
 # 日本語でダウンロード
 RUN wp core download --path=/var/www/html/wordpress --locale=ja --allow-root
+RUN chmod -R 777 /var/www/html/wordpress
 
 # 設定ファイル等をコピー
 COPY ./conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
