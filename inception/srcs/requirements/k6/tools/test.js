@@ -4,19 +4,26 @@ import { sleep } from 'k6';
 export let options = {
 	insecureSkipTLSVerify: true,
 	stages: [
-		{ target: 10, duration: '20s' },
-		{ target: 50, duration: '20s' },
-		{ target: 100, duration: '20s' },
-		{ target: 20, duration: '20s' },
-		{ target: 50, duration: '20s' },
-		{ target: 10, duration: '20s' },
+		{ target: 10, duration: '10s' },
+		{ target: 25, duration: '10s' },
+		{ target: 50, duration: '10s' },
+		{ target: 10, duration: '10s' },
+		{ target: 25, duration: '10s' },
+		{ target: 10, duration: '10s' },
 	]
 };
 
 export default function() {
-	const res = http.get('https://nginx/rust/');
-	check(res, {
-		'response code == 200': (res) => res.status === 200,
-	});
+	const responses = http.batch([
+		['GET', "https://nginx"],
+		['GET', "https://nginx/rust/"],
+		['GET', "https://nginx/adminer"],
+	])
+
+	for (res of responses) {
+		check(res, {
+			'response code == 200': (res) => res.status === 200,
+		});
+	}
 	sleep(1);
 }
