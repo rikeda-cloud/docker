@@ -157,6 +157,9 @@ services:
     image: ftp
     build:
       context: ./requirements/ftp/
+      args:
+        - FTP_USER=$FTP_USER
+        - FTP_PASSWORD=$FTP_PASSWORD
     container_name: ftp
     tmpfs:
       - /tmp

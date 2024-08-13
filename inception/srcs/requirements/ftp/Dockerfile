@@ -1,4 +1,6 @@
 FROM debian:bullseye
+ARG FTP_USER
+ARG FTP_PASSWORD
 
 RUN apt-get update && apt-get -y install \
 	ftp \
@@ -9,10 +11,10 @@ RUN apt-get update && apt-get -y install \
 
 # FTP操作用のユーザーとなるftpuserを作成
 RUN mkdir -p /var/www/html && \
-	useradd ftpuser -d /var/www/html && \
-	echo "ftpuser:ftpuser_password" | chpasswd && \
+	useradd ${FTP_USER} -d /var/www/html && \
+	echo "${FTP_USER}:${FTP_PASSWORD}" | chpasswd && \
 	chmod -R 755 /var/www/html && \
-	chown -R ftpuser:ftpuser /var/www/html
+	chown -R ${FTP_USER}:${FTP_USER} /var/www/html
 
 COPY ./conf/vsftpd.conf /etc/
 
