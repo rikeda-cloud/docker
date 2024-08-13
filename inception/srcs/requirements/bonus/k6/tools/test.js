@@ -15,7 +15,6 @@ export let options = {
 
 export default function() {
 	const responses = http.batch([
-		['GET', "https://nginx"],
 		['GET', "https://nginx/rust/"],
 		['GET', "https://nginx/adminer"],
 	])
