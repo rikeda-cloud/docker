@@ -13,6 +13,7 @@ ARG WORDPRESS_NORMAL_EMAIL
 
 RUN apt-get update && apt-get -y install \
 	curl \
+	gettext-base \
 	php \
 	php-fpm \
 	php-curl \
@@ -32,26 +33,13 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 	chmod +x wp-cli.phar && \
 	mv wp-cli.phar /usr/local/bin/wp
 
-# WP-CLIコマンドを用いたWordPress立ち上げ用のスクリプトの準備
-COPY ./tools/start_wordpress.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/start_wordpress.sh
-
 # 設定ファイルをコピー
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
-# systemd起動時に環境変数を設定
-RUN echo DefaultEnvironment=\
-	"DOMAIN_NAME=${DOMAIN_NAME} \
-	WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME} \
-	MARIADB_USER=${MARIADB_USER} \
-	MARIADB_PASSWORD=${MARIADB_PASSWORD} \
-	WORDPRESS_TITLE=${WORDPRESS_TITLE} \
-	WORDPRESS_ADMIN_USER=${WORDPRESS_ADMIN_USER} \
-	WORDPRESS_ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD} \
-	WORDPRESS_ADMIN_EMAIL=${WORDPRESS_ADMIN_EMAIL} \
-	WORDPRESS_NORMAL_USER=${WORDPRESS_NORMAL_USER} \
-	WORDPRESS_NORMAL_PASSWORD=${WORDPRESS_NORMAL_PASSWORD} \
-	WORDPRESS_NORMAL_EMAIL=${WORDPRESS_NORMAL_EMAIL}" >> /etc/systemd/system.conf
+# WP-CLIコマンドを用いたWordPress立ち上げ用のスクリプトの準備し、環境変数を置換
+COPY ./tools/start_wordpress.sh /tmp/
+RUN envsubst < /tmp/start_wordpress.sh > /usr/local/bin/start_wordpress.sh && \
+	chmod +x /usr/local/bin/start_wordpress.sh
 
 # start_wordpress.shでphp-fpmを起動するため自動起動させない設定
 RUN systemctl disable php7.4-fpm
