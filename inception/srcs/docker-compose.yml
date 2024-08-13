@@ -43,6 +43,10 @@ services:
     image: mariadb
     build:
       context: ./requirements/mariadb/
+      args:
+        - WORDPRESS_DB_NAME=$WORDPRESS_DB_NAME
+        - MARIADB_USER=$MARIADB_USER
+        - MARIADB_PASSWORD=$MARIADB_PASSWORD
     container_name: mariadb
     tmpfs:
       - /tmp
