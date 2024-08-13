@@ -8,6 +8,11 @@ services:
     image: nginx
     build:
       context: ./requirements/nginx/
+      args:
+        - WEB_SERVER_CERT_PATH=${WEB_SERVER_CERT_PATH}
+        - WEB_SERVER_KEY_PATH=${WEB_SERVER_KEY_PATH}
+    environment:
+      - DOMAIN_NAME=$DOMAIN_NAME
     ports:
       - 443:443
     container_name: nginx
