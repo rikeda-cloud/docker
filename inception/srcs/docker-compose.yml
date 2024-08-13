@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   nginx:
     stdin_open: true
@@ -11,8 +9,7 @@ services:
       args:
         - WEB_SERVER_CERT_PATH=${WEB_SERVER_CERT_PATH}
         - WEB_SERVER_KEY_PATH=${WEB_SERVER_KEY_PATH}
-    environment:
-      - DOMAIN_NAME=$DOMAIN_NAME
+        - DOMAIN_NAME=${DOMAIN_NAME}
     ports:
       - 443:443
     container_name: nginx
@@ -49,9 +46,9 @@ services:
     build:
       context: ./requirements/mariadb/
       args:
-        - WORDPRESS_DB_NAME=$WORDPRESS_DB_NAME
-        - MARIADB_USER=$MARIADB_USER
-        - MARIADB_PASSWORD=$MARIADB_PASSWORD
+        - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+        - MARIADB_USER=${MARIADB_USER}
+        - MARIADB_PASSWORD=${MARIADB_PASSWORD}
     container_name: mariadb
     tmpfs:
       - /tmp
@@ -75,6 +72,18 @@ services:
     image: wordpress
     build:
       context: ./requirements/wordpress/
+      args:
+        - DOMAIN_NAME=${DOMAIN_NAME}
+        - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+        - MARIADB_USER=${MARIADB_USER}
+        - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+        - WORDPRESS_TITLE=${WORDPRESS_TITLE}
+        - WORDPRESS_ADMIN_USER=${WORDPRESS_ADMIN_USER}
+        - WORDPRESS_ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD}
+        - WORDPRESS_ADMIN_EMAIL=${WORDPRESS_ADMIN_EMAIL}
+        - WORDPRESS_NORMAL_USER=${WORDPRESS_NORMAL_USER}
+        - WORDPRESS_NORMAL_PASSWORD=${WORDPRESS_NORMAL_PASSWORD}
+        - WORDPRESS_NORMAL_EMAIL=${WORDPRESS_NORMAL_EMAIL}
     container_name: wordpress
     depends_on:
       mariadb:
