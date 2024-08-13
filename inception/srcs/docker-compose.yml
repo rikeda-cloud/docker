@@ -10,6 +10,7 @@ services:
         - WEB_SERVER_CERT_PATH=${WEB_SERVER_CERT_PATH}
         - WEB_SERVER_KEY_PATH=${WEB_SERVER_KEY_PATH}
         - DOMAIN_NAME=${DOMAIN_NAME}
+        - DOMAIN_NAME_BONUS=${DOMAIN_NAME_BONUS}
     ports:
       - 443:443
     container_name: nginx
