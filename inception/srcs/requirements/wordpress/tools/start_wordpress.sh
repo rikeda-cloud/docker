@@ -42,3 +42,10 @@ wp config set WP_CACHE "true" --allow-root && \
 # redisプラグインをインストール
 wp plugin install redis-cache --path=/var/www/html/wordpress --activate --allow-root
 wp redis enable --path=/var/www/html/wordpress --allow-root
+
+echo finish init wordpress
+
+systemctl enable php7.4-fpm
+systemctl start php7.4-fpm
+
+echo start wordpress
