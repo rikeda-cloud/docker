@@ -6,6 +6,8 @@ After=network.target
 ExecStart=/usr/bin/k6 run /etc/k6/scripts/test.js
 WorkingDirectory=/etc/k6/scripts
 Restart=always
+User=k6
+Group=k6
 
 [Install]
 WantedBy=multi-user.target

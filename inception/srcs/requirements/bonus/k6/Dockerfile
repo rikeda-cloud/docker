@@ -18,6 +18,7 @@ RUN curl -s https://dl.k6.io/key.gpg | apt-key add - && \
 RUN mkdir -p /etc/k6/scripts/
 COPY ./tools/test.js /etc/k6/scripts/
 
+RUN useradd --no-create-home --shell /bin/false k6
 COPY ./conf/k6.service /etc/systemd/system/
 RUN systemctl enable k6
 ENTRYPOINT ["/bin/systemd"]
