@@ -16,6 +16,7 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
 	mv nginx-prometheus-exporter /usr/bin/nginx-prometheus-exporter && \
 	rm exporter.tar.gz
 
+RUN useradd --no-create-home --shell /bin/false exporter
 COPY ./conf/exporter.service /etc/systemd/system/
 RUN systemctl enable exporter
 ENTRYPOINT ["/bin/systemd"]

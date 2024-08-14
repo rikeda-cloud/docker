@@ -7,6 +7,8 @@ ExecStart=/usr/bin/nginx-prometheus-exporter \
     --nginx.scrape-uri https://nginx:443/stub_status \
     --nginx.ssl-verify=false
 Restart=always
+User=exporter
+Group=exporter
 
 [Install]
 WantedBy=multi-user.target
