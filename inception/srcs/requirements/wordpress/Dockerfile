@@ -41,6 +41,9 @@ COPY ./tools/start_wordpress.sh /tmp/
 RUN envsubst < /tmp/start_wordpress.sh > /usr/local/bin/start_wordpress.sh && \
 	chmod +x /usr/local/bin/start_wordpress.sh
 
+COPY ./conf/php7.4-fpm.service /etc/systemd/system/
+RUN chown -R www-data /var/log/
+
 # start_wordpress.shでphp-fpmを起動するため自動起動させない設定
 RUN systemctl disable php7.4-fpm
 
