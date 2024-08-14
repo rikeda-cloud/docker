@@ -157,6 +157,9 @@ services:
     build:
       context: ./requirements/bonus/adminer/
     container_name: adminer
+    depends_on:
+      mariadb:
+        condition: service_healthy
     networks:
       - nginx_adminer
       - adminer_mariadb
@@ -266,6 +269,7 @@ services:
       interval: 2s
       timeout: 30s
       retries: 3
+      start_period: 30s
     networks:
       - grafana_prometheus
 
@@ -282,7 +286,7 @@ services:
       - /run
     privileged: true
     depends_on:
-      nginx:
+      grafana:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://nginx:443/"]
