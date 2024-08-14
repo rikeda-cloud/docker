@@ -15,7 +15,7 @@ RUN apt-get update && apt-get -y install \
 	curl \
 	gettext-base \
 	php \
-	php-fpm \
+	php7.4-fpm \
 	php-curl \
 	php-mysql \
 	php-mbstring \
