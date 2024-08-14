@@ -2,13 +2,6 @@
 
 cd /var/www/html/wordpress
 
-# Wordpressを日本語でダウンロード
-mkdir -p /var/www/html && \
-	wp core download --path=/var/www/html/wordpress --locale=ja --allow-root && \
-	chmod -R 777 /var/www/html/wordpress
-
-export > /root/result_export.txt
-
 # configファイルの作成
 wp core config \
 	--dbname=${WORDPRESS_DB_NAME} \
@@ -54,10 +47,3 @@ wp plugin install redis-cache \
 wp redis enable \
 	--path=/var/www/html/wordpress \
 	--allow-root
-
-echo finish init wordpress
-
-systemctl enable php7.4-fpm
-systemctl start php7.4-fpm
-
-echo start wordpress

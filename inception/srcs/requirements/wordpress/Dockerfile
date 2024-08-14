@@ -33,20 +33,19 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 	chmod +x wp-cli.phar && \
 	mv wp-cli.phar /usr/local/bin/wp
 
-# 設定ファイルをコピー
-COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
-
 # WP-CLIコマンドを用いたWordPress立ち上げ用のスクリプトの準備し、環境変数を置換
 COPY ./tools/start_wordpress.sh /tmp/
 RUN envsubst < /tmp/start_wordpress.sh > /usr/local/bin/start_wordpress.sh && \
 	chmod +x /usr/local/bin/start_wordpress.sh
 
+# Wordpressを日本語でダウンロード && 権限の付与
+RUN mkdir -p /var/www/html/wordpress && \
+	wp core download --path=/var/www/html/wordpress --locale=ja --allow-root && \
+	chown -R www-data /var/www/html/wordpress && \
+	chmod -R 777 /var/www/html/wordpress && \
+	chown -R www-data /var/log/
+
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY ./conf/php7.4-fpm.service /etc/systemd/system/
-RUN chown -R www-data /var/log/
-
-# start_wordpress.shでphp-fpmを起動するため自動起動させない設定
-RUN systemctl disable php7.4-fpm
-
-COPY ./conf/wordpress.service /etc/systemd/system/
-RUN systemctl enable wordpress
+RUN systemctl enable php7.4-fpm
 ENTRYPOINT ["/bin/systemd"]
