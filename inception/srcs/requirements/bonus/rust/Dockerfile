@@ -28,6 +28,7 @@ RUN apt-get update && apt-get -y install \
 # ビルドステージでビルドしたバイナリをCOPY
 COPY --from=build /usr/src/rust-server/target/release/rust-server /usr/local/bin
 
+RUN useradd --no-create-home --shell /bin/false rust-server
 COPY ./conf/rust-server.service /etc/systemd/system/
 RUN systemctl enable rust-server
 ENTRYPOINT ["/bin/systemd"]
