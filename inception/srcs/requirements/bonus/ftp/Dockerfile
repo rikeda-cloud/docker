@@ -9,7 +9,7 @@ RUN apt-get update && apt-get -y install \
 	systemd-sysv && \
 	rm -rf /var/lib/apt/lists/*
 
-# FTP操作用のユーザーとなるftpuserを作成
+# FTP操作用のユーザーを作成
 RUN mkdir -p /var/www/html && \
 	useradd ${FTP_USER} -d /var/www/html && \
 	echo "${FTP_USER}:${FTP_PASSWORD}" | chpasswd && \
