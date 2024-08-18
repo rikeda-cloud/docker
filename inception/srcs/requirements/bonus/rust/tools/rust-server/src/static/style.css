@@ -5,3 +5,8 @@
 .content p {
 	font-size: 100px;
 }
+
+.content img {
+	height: 100px;
+	width: 100px;
+}
