@@ -29,7 +29,7 @@ services:
       retries: 3
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   mariadb:
@@ -54,7 +54,7 @@ services:
       retries: 3
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   wordpress:
@@ -91,7 +91,7 @@ services:
       start_period: 60s
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   rust:
@@ -108,7 +108,7 @@ services:
       retries: 3
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   redis:
@@ -125,7 +125,7 @@ services:
       - wordpress_redis
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   adminer:
@@ -145,7 +145,7 @@ services:
       retries: 3
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   ftp:
@@ -168,7 +168,7 @@ services:
       - wordpress-volume:/var/www/html/
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   exporter:
@@ -186,7 +186,7 @@ services:
       retries: 3
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   prometheus:
@@ -206,7 +206,7 @@ services:
       retries: 3
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   grafana:
@@ -228,7 +228,7 @@ services:
       start_period: 30s
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
   k6:
@@ -247,7 +247,7 @@ services:
       retries: 3
     tmpfs: [/tmp, /run]
     privileged: true
-    restart: always
+    restart: on-failure
     stop_signal: SIGRTMIN+3
 
 networks:
