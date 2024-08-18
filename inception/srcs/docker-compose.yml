@@ -1,6 +1,6 @@
 services:
   nginx:
-    restart: always
+    container_name: nginx
     image: nginx
     build:
       context: ./requirements/nginx/
@@ -9,36 +9,31 @@ services:
         - WEB_SERVER_KEY_PATH=${WEB_SERVER_KEY_PATH}
         - DOMAIN_NAME=${DOMAIN_NAME}
         - DOMAIN_NAME_BONUS=${DOMAIN_NAME_BONUS}
-    ports:
-      - 443:443
-    container_name: nginx
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
+    ports: [443:443]
     depends_on:
-      wordpress:
-        condition: service_healthy
-      rust:
-        condition: service_healthy
-      adminer:
-        condition: service_healthy
-    networks:
+      wordpress: {condition: service_healthy}
+      rust: {condition: service_healthy}
+      adminer: {condition: service_healthy}
+    volumes:
+      - wordpress-volume:/var/www/html/wordpress/
+    networks: 
       - nginx_wordpress
       - nginx_rust
       - nginx_adminer
       - nginx_exporter
       - nginx_k6
-    volumes:
-      - wordpress-volume:/var/www/html/wordpress/
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://localhost:443/"]
       interval: 2s
       timeout: 30s
       retries: 3
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   mariadb:
-    restart: always
+    container_name: mariadb
     image: mariadb
     build:
       context: ./requirements/mariadb/
@@ -47,11 +42,6 @@ services:
         - MARIADB_USER=${MARIADB_USER}
         - MARIADB_PASSWORD=${MARIADB_PASSWORD}
         - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-    container_name: mariadb
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     networks:
       - wordpress_mariadb
       - adminer_mariadb
@@ -62,9 +52,13 @@ services:
       interval: 2s
       timeout: 30s
       retries: 3
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   wordpress:
-    restart: always
+    container_name: wordpress
     image: wordpress
     build:
       context: ./requirements/wordpress/
@@ -80,57 +74,48 @@ services:
         - WORDPRESS_NORMAL_USER=${WORDPRESS_NORMAL_USER}
         - WORDPRESS_NORMAL_PASSWORD=${WORDPRESS_NORMAL_PASSWORD}
         - WORDPRESS_NORMAL_EMAIL=${WORDPRESS_NORMAL_EMAIL}
-    container_name: wordpress
     depends_on:
-      mariadb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      mariadb: {condition: service_healthy}
+      redis: {condition: service_healthy}
     networks:
       - wordpress_mariadb
       - nginx_wordpress
       - wordpress_redis
     volumes:
       - wordpress-volume:/var/www/html/wordpress/
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     healthcheck:
       test: ["CMD", "pgrep", "php-fpm"]
       interval: 2s
       timeout: 30s
       retries: 3
       start_period: 60s
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   rust:
-    restart: always
+    container_name: rust
     image: rust
     build:
       context: ./requirements/bonus/rust/
-    container_name: rust
     networks:
       - nginx_rust
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://127.0.0.1:4000/"]
       interval: 2s
       timeout: 30s
       retries: 3
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   redis:
-    restart: always
     image: redis
+    container_name: redis
     build:
       context: ./requirements/bonus/redis/
-    container_name: redis
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 2s
@@ -138,42 +123,39 @@ services:
       retries: 3
     networks:
       - wordpress_redis
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   adminer:
-    restart: always
+    container_name: adminer
     image: adminer
     build:
       context: ./requirements/bonus/adminer/
-    container_name: adminer
     depends_on:
-      mariadb:
-        condition: service_healthy
+      mariadb: {condition: service_healthy}
     networks:
       - nginx_adminer
       - adminer_mariadb
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://127.0.0.1:5000/"]
       interval: 2s
       timeout: 30s
       retries: 3
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   ftp:
-    restart: always
+    container_name: ftp
     image: ftp
     build:
       context: ./requirements/bonus/ftp/
       args:
         - FTP_USER=$FTP_USER
         - FTP_PASSWORD=$FTP_PASSWORD
-    container_name: ftp
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     ports:
       - 21:21
       - 10000-10100:10000-10100
@@ -184,95 +166,89 @@ services:
       retries: 3
     volumes:
       - wordpress-volume:/var/www/html/
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   exporter:
-    restart: always
+    container_name: exporter
     image: exporter
     build:
       context: ./requirements/bonus/exporter/
-    container_name: exporter
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
-    networks:
-      - nginx_exporter
-      - exporter_prometheus
     depends_on:
-      nginx:
-        condition: service_healthy
+      nginx: {condition: service_healthy}
+    networks: [nginx_exporter, exporter_prometheus]
     healthcheck:
       test: ["CMD", "curl", "http://localhost:9113/metrics"]
       interval: 2s
       timeout: 30s
       retries: 3
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   prometheus:
-    restart: always
+    container_name: prometheus
     image: prometheus
     build:
       context: ./requirements/bonus/prometheus/
-    container_name: prometheus
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     networks:
       - exporter_prometheus
       - grafana_prometheus
     depends_on:
-      exporter:
-        condition: service_healthy
+      exporter: {condition: service_healthy}
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:9090"]
       interval: 2s
       timeout: 30s
       retries: 3
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   grafana:
-    restart: always
+    container_name: grafana
     image: grafana
     build:
       context: ./requirements/bonus/grafana/
-    container_name: grafana
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     depends_on:
       prometheus:
         condition: service_healthy
-    ports:
-      - 3000:3000
+    ports: [3000:3000]
+    networks:
+      - grafana_prometheus
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:3000/login"]
       interval: 2s
       timeout: 30s
       retries: 3
       start_period: 30s
-    networks:
-      - grafana_prometheus
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
   k6:
-    restart: always
+    container_name: k6
     image: k6
     build:
       context: ./requirements/bonus/k6/
-    container_name: k6
-    tmpfs:
-      - /tmp
-      - /run
-    privileged: true
     depends_on:
-      grafana:
-        condition: service_healthy
+      grafana: {condition: service_healthy}
+    networks:
+      - nginx_k6
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://nginx:443/"]
       interval: 2s
       timeout: 30s
       retries: 3
-    networks:
-      - nginx_k6
+    tmpfs: [/tmp, /run]
+    privileged: true
+    restart: always
+    stop_signal: SIGRTMIN+3
 
 networks:
   wordpress_mariadb:
