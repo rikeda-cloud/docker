@@ -1,7 +1,5 @@
 services:
   nginx:
-    stdin_open: true
-    tty: true
     restart: always
     image: nginx
     build:
@@ -40,8 +38,6 @@ services:
       retries: 3
 
   mariadb:
-    stdin_open: true
-    tty: true
     restart: always
     image: mariadb
     build:
@@ -68,8 +64,6 @@ services:
       retries: 3
 
   wordpress:
-    stdin_open: true
-    tty: true
     restart: always
     image: wordpress
     build:
@@ -110,8 +104,6 @@ services:
       start_period: 60s
 
   rust:
-    stdin_open: true
-    tty: true
     restart: always
     image: rust
     build:
@@ -130,8 +122,6 @@ services:
       retries: 3
 
   redis:
-    stdin_open: true
-    tty: true
     restart: always
     image: redis
     build:
@@ -150,8 +140,6 @@ services:
       - wordpress_redis
 
   adminer:
-    stdin_open: true
-    tty: true
     restart: always
     image: adminer
     build:
@@ -174,8 +162,6 @@ services:
       retries: 3
 
   ftp:
-    stdin_open: true
-    tty: true
     restart: always
     image: ftp
     build:
@@ -200,8 +186,6 @@ services:
       - wordpress-volume:/var/www/html/
 
   exporter:
-    stdin_open: true
-    tty: true
     restart: always
     image: exporter
     build:
@@ -224,8 +208,6 @@ services:
       retries: 3
 
   prometheus:
-    stdin_open: true
-    tty: true
     restart: always
     image: prometheus
     build:
@@ -248,8 +230,6 @@ services:
       retries: 3
 
   grafana:
-    stdin_open: true
-    tty: true
     restart: always
     image: grafana
     build:
@@ -274,8 +254,6 @@ services:
       - grafana_prometheus
 
   k6:
-    stdin_open: true
-    tty: true
     restart: always
     image: k6
     build:
