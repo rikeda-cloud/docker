@@ -18,5 +18,8 @@ RUN mkdir -p /var/www/html && \
 
 COPY ./conf/vsftpd.conf /etc/
 
+# 自動起動するMTAをdisable
+RUN systemctl disable exim4
+
 RUN systemctl enable vsftpd
 ENTRYPOINT ["/bin/systemd"]

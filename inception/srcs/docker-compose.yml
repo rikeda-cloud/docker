@@ -146,7 +146,7 @@ services:
         - FTP_PASSWORD=$FTP_PASSWORD
     ports:
       - 21:21
-      - 10000-10100:10000-10100
+      - 10000-10010:10000-10010
     healthcheck:
       test: ["CMD", "ftp", "localhost"]
       interval: 5s
