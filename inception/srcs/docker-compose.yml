@@ -15,7 +15,7 @@ services:
       rust: {condition: service_healthy}
       adminer: {condition: service_healthy}
     volumes:
-      - wordpress-volume:/var/www/html/wordpress/
+      - wordpress-content:/var/www/html/wordpress/
     networks: 
       - nginx_wordpress
       - nginx_rust
@@ -24,9 +24,7 @@ services:
       - nginx_k6
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://localhost:443/"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -46,12 +44,10 @@ services:
       - wordpress_mariadb
       - adminer_mariadb
     volumes:
-      - wordpress-db-volume:/var/lib/mysql/
+      - mariadb-data:/var/lib/mysql/
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "--silent"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -82,13 +78,11 @@ services:
       - nginx_wordpress
       - wordpress_redis
     volumes:
-      - wordpress-volume:/var/www/html/wordpress/
+      - wordpress-content:/var/www/html/wordpress/
     healthcheck:
       test: ["CMD", "pgrep", "php-fpm"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
-      start_period: 60s
+      interval: 5s
+      start_period: 30s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -103,9 +97,7 @@ services:
       - nginx_rust
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://127.0.0.1:4000/"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -118,9 +110,7 @@ services:
       context: ./requirements/bonus/redis/
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     networks:
       - wordpress_redis
     tmpfs: [/tmp, /run]
@@ -140,9 +130,7 @@ services:
       - adminer_mariadb
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://127.0.0.1:5000/"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -161,11 +149,9 @@ services:
       - 10000-10100:10000-10100
     healthcheck:
       test: ["CMD", "ftp", "localhost"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     volumes:
-      - wordpress-volume:/var/www/html/
+      - wordpress-content:/var/www/html/
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -178,12 +164,12 @@ services:
       context: ./requirements/bonus/exporter/
     depends_on:
       nginx: {condition: service_healthy}
-    networks: [nginx_exporter, exporter_prometheus]
+    networks:
+      - nginx_exporter
+      - monitor
     healthcheck:
       test: ["CMD", "curl", "http://localhost:9113/metrics"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -195,15 +181,12 @@ services:
     build:
       context: ./requirements/bonus/prometheus/
     networks:
-      - exporter_prometheus
-      - grafana_prometheus
+      - monitor
     depends_on:
       exporter: {condition: service_healthy}
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:9090"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -219,12 +202,10 @@ services:
         condition: service_healthy
     ports: [3000:3000]
     networks:
-      - grafana_prometheus
+      - monitor
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:3000/login"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
       start_period: 30s
     tmpfs: [/tmp, /run]
     privileged: true
@@ -242,34 +223,33 @@ services:
       - nginx_k6
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://nginx:443/"]
-      interval: 2s
-      timeout: 30s
-      retries: 3
+      interval: 5s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
     stop_signal: SIGRTMIN+3
 
 networks:
-  wordpress_mariadb:
-  nginx_wordpress:
-  nginx_rust:
-  wordpress_redis:
-  nginx_adminer:
-  adminer_mariadb:
-  nginx_exporter:
-  exporter_prometheus:
-  grafana_prometheus:
-  nginx_k6:
+  nginx_wordpress: {name: nginx_wordpress}
+  wordpress_mariadb: {name: wordpress_mariadb}
+  nginx_rust: {name: nginx_rust}
+  wordpress_redis: {name: wordpress_redis}
+  nginx_adminer: {name: nginx_adminer}
+  adminer_mariadb: {name: adminer_mariadb}
+  nginx_exporter: {name: nginx_exporter}
+  monitor: {name: monitor}
+  nginx_k6: {name: nginx_k6}
 
 volumes:
-  wordpress-volume:
+  wordpress-content:
+    name: wordpress-content
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${HOME}/data/wordpress
-  wordpress-db-volume:
+  mariadb-data:
+    name: mariadb-data
     driver: local
     driver_opts:
       type: none
