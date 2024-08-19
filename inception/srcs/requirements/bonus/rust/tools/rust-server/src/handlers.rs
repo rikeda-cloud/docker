@@ -25,6 +25,7 @@ pub async fn image_handler(Path(image_name): Path<String>) -> impl IntoResponse 
         "docker_container.png" => include_bytes!("images/docker_container.png"),
         "docker_mandatory.png" => include_bytes!("images/docker_mandatory.png"),
         "docker_bonus.png" => include_bytes!("images/docker_bonus.png"),
+        "docker_structure.png" => include_bytes!("images/docker_structure.png"),
     };
     match IMAGE_DATA_MAP.get(image_name.as_str()) {
         Some(data) => Response::builder()
