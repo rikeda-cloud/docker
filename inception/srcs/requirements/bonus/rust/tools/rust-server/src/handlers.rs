@@ -22,10 +22,10 @@ pub async fn style_handler() -> impl IntoResponse {
 
 pub async fn image_handler(Path(image_name): Path<String>) -> impl IntoResponse {
     static IMAGE_DATA_MAP: phf::Map<&'static str, &[u8]> = phf_map! {
-        "docker_container.png" => include_bytes!("images/docker_container.png"),
-        "docker_mandatory.png" => include_bytes!("images/docker_mandatory.png"),
-        "docker_bonus.png" => include_bytes!("images/docker_bonus.png"),
-        "docker_structure.png" => include_bytes!("images/docker_structure.png"),
+        "container.png" => include_bytes!("images/container.png"),
+        "mandatory.png" => include_bytes!("images/mandatory.png"),
+        "bonus.png" => include_bytes!("images/bonus.png"),
+        "structure.png" => include_bytes!("images/structure.png"),
     };
     match IMAGE_DATA_MAP.get(image_name.as_str()) {
         Some(data) => Response::builder()
