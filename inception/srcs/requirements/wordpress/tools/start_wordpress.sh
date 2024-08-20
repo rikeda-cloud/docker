@@ -33,6 +33,10 @@ wp user create ${WORDPRESS_NORMAL_USER} \
 # WordPressのスキームの設定
 wp theme activate twentytwentytwo --allow-root
 
+# commentをadminの認可無しで付与
+wp option update comment_moderation '0' && \
+	wp option update comment_whitelist '0'
+
 # redis用の設定をconfigファイルに追記
 wp config set WP_CACHE "true" --allow-root && \
 	wp config set WP_REDIS_HOST "redis" --allow-root && \
@@ -43,7 +47,7 @@ wp config set WP_CACHE "true" --allow-root && \
 wp plugin install redis-cache \
 	--path=/var/www/html/wordpress \
 	--activate \
-	--allow-root
-wp redis enable \
+	--allow-root && \
+	wp redis enable \
 	--path=/var/www/html/wordpress \
 	--allow-root
