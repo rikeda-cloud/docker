@@ -11,6 +11,9 @@ openssl req -new -key ./server.key -out ./server.csr -config ./openssl.cnf
 openssl req -new -x509 -days 365 -key ./ca.key -out ./ca.crt -subj "/C=JP/ST=Tokyo/L=Minato/O=Example/OU=IT/CN=Example CA"
 openssl x509 -req -days 365 -in ./server.csr -CA ./ca.crt -CAkey ./ca.key -CAcreateserial -out ./server.crt -extfile ./openssl.cnf -extensions req_ext
 
+# dataディレクトリの作成
+mkdir -p ${HOME}/data/{mariadb,wordpress}
+
 # ホストに証明書を登録する
 # sudo cp ./server.crt ./ca.crt /etc/pki/ca-trust/source/anchors/
 # sudo update-ca-trust
