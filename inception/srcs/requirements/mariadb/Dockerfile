@@ -6,8 +6,7 @@ ARG MARIADB_ROOT_PASSWORD
 
 RUN apt-get update && apt-get -y install \
 	mariadb-server \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/

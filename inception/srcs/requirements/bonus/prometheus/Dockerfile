@@ -3,8 +3,7 @@ FROM debian:bullseye
 RUN apt-get update && apt-get -y install \
 	curl \
 	prometheus \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/prometheus.yml /etc/prometheus/

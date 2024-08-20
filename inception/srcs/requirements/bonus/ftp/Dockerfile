@@ -5,8 +5,7 @@ ARG FTP_PASSWORD
 RUN apt-get update && apt-get -y install \
 	ftp \
 	vsftpd \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	rm -rf /var/lib/apt/lists/*
 
 # FTP操作用のユーザーを作成

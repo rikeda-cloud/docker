@@ -2,8 +2,7 @@ FROM debian:bullseye
 
 RUN apt-get update && apt-get -y install \
 	curl \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	rm -rf /var/lib/apt/lists/*
 
 # アーキテクチャに合わせてnginx-prometheus-exporterをダウンロード

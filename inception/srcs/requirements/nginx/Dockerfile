@@ -5,13 +5,11 @@ ARG DOMAIN_NAME
 ARG DOMAIN_NAME_BONUS
 
 RUN apt-get update && apt-get -y install \
-	bash \
 	curl \
 	gettext-base \
 	nginx \
 	nginx-core \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /etc/nginx/certs

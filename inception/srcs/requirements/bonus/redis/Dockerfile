@@ -3,8 +3,7 @@ FROM debian:bullseye
 RUN apt-get update && apt-get -y install \
 	curl \
 	redis \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	rm -rf /var/lib/apt/lists/*
 
 # 外部からの接続を可能にする設定を付与

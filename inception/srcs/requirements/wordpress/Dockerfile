@@ -20,10 +20,7 @@ RUN apt-get update && apt-get -y install \
 	php-mysql \
 	php-mbstring \
 	php-redis \
-	unzip \
-	zip \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	apt-get -y remove --purge apache2 && \
 	apt-get -y autoremove && \
 	rm -rf /var/lib/apt/lists/*

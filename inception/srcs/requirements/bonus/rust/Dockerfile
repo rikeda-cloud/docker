@@ -5,8 +5,7 @@ RUN apt-get update && apt-get -y install \
 	build-essential \
 	cmake \
 	curl \
-	gcc && \
-	rm -rf /var/lib/apt/lists/*
+	gcc
 
 # Rustをインストール
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -21,8 +20,7 @@ FROM debian:bullseye AS production
 
 RUN apt-get update && apt-get -y install \
 	curl \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	rm -rf /var/lib/apt/lists/*
 
 # ビルドステージでビルドしたバイナリをCOPY

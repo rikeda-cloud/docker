@@ -4,8 +4,7 @@ RUN apt-get update && apt-get -y install \
 	apt-transport-https \
 	curl \
 	gnupg \
-	systemd \
-	systemd-sysv
+	systemd
 
 # k6のインストール
 RUN curl -s https://dl.k6.io/key.gpg | apt-key add - && \

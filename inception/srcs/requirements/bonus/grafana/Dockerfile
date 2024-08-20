@@ -3,10 +3,8 @@ FROM debian:bullseye
 RUN apt-get update && apt-get -y install \
 	apt-transport-https \
 	curl \
-	dirmngr \
 	gpg \
-	systemd \
-	systemd-sysv
+	systemd
 
 # grafanaをインストール
 RUN mkdir -p /etc/apt/keyrings && \

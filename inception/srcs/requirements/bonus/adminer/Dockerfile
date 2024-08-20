@@ -6,11 +6,8 @@ RUN apt-get update && apt-get -y install \
 	php-mysqli \
 	php-xml \
 	php-mbstring \
-	php-zip \
 	php-json \
-	php-gd \
-	systemd \
-	systemd-sysv && \
+	systemd && \
 	apt-get -y remove --purge apache2 && \
 	apt-get -y autoremove && \
 	rm -rf /var/lib/apt/lists/*
