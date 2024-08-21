@@ -198,8 +198,7 @@ services:
     build:
       context: ./requirements/bonus/grafana/
     depends_on:
-      prometheus:
-        condition: service_healthy
+      prometheus: {condition: service_healthy}
     ports: [3000:3000]
     networks:
       - monitor
