@@ -210,8 +210,6 @@ services:
     privileged: true
     restart: on-failure
     stop_signal: SIGRTMIN+3
-    mem_limit: 2g
-    cpus: '2.0'
 
   k6:
     container_name: k6
