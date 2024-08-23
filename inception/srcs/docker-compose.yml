@@ -144,6 +144,7 @@ services:
       args:
         - FTP_USER=$FTP_USER
         - FTP_PASSWORD=$FTP_PASSWORD
+        - FTP_PASSIVE_ADDRESS=$FTP_PASSIVE_ADDRESS
     ports:
       - 21:21
       - 10000-10010:10000-10010

@@ -1,9 +1,11 @@
 FROM debian:bullseye
 ARG FTP_USER
 ARG FTP_PASSWORD
+ARG FTP_PASSIVE_ADDRESS
 
 RUN apt-get update && apt-get -y install \
 	ftp \
+	gettext-base \
 	vsftpd \
 	systemd && \
 	rm -rf /var/lib/apt/lists/*
@@ -15,7 +17,8 @@ RUN mkdir -p /var/www/html && \
 	chmod -R 755 /var/www/html && \
 	chown -R ${FTP_USER}:${FTP_USER} /var/www/html
 
-COPY ./conf/vsftpd.conf /etc/
+COPY ./conf/vsftpd.conf /tmp/
+RUN envsubst < /tmp/vsftpd.conf > /etc/vsftpd.conf
 
 # 自動起動するMTAをdisable
 RUN systemctl disable exim4
