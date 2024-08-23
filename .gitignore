@@ -1,3 +1,9 @@
-wiki
 .gitignore
-wordpress/docker-compose.yml
+srcs/requirements/tools/ca.crt
+srcs/requirements/tools/ca.key
+srcs/requirements/tools/ca.srl
+srcs/requirements/tools/server.crt
+srcs/requirements/tools/server.csr
+srcs/requirements/tools/server.key
+srcs/requirements/nginx/server.crt
+srcs/requirements/nginx/server.key
