@@ -24,7 +24,7 @@ services:
       - nginx_k6
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://localhost:443/"]
-      interval: 5s
+      interval: 10s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -47,7 +47,7 @@ services:
       - mariadb-data:/var/lib/mysql/
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "--silent"]
-      interval: 5s
+      interval: 10s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -81,8 +81,8 @@ services:
       - wordpress-content:/var/www/html/wordpress/
     healthcheck:
       test: ["CMD", "pgrep", "php-fpm"]
-      interval: 5s
-      start_period: 60s
+      interval: 10s
+      start_period: 2m
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -97,7 +97,7 @@ services:
       - nginx_rust
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://127.0.0.1:4000/"]
-      interval: 5s
+      interval: 10s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -110,7 +110,7 @@ services:
       context: ./requirements/bonus/redis/
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
+      interval: 10s
     networks:
       - wordpress_redis
     tmpfs: [/tmp, /run]
@@ -130,7 +130,7 @@ services:
       - adminer_mariadb
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://127.0.0.1:5000/"]
-      interval: 5s
+      interval: 10s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -150,7 +150,7 @@ services:
       - 10000-10010:10000-10010
     healthcheck:
       test: ["CMD", "ftp", "localhost"]
-      interval: 5s
+      interval: 10s
     volumes:
       - wordpress-content:/var/www/html/
     tmpfs: [/tmp, /run]
@@ -170,7 +170,7 @@ services:
       - monitor
     healthcheck:
       test: ["CMD", "curl", "http://localhost:9113/metrics"]
-      interval: 5s
+      interval: 10s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -187,7 +187,7 @@ services:
       exporter: {condition: service_healthy}
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:9090"]
-      interval: 5s
+      interval: 10s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -205,8 +205,8 @@ services:
       - monitor
     healthcheck:
       test: ["CMD", "curl", "--silent", "http://localhost:3000/login"]
-      interval: 5s
-      start_period: 60s
+      interval: 10s
+      start_period: 30s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
@@ -223,7 +223,7 @@ services:
       - nginx_k6
     healthcheck:
       test: ["CMD", "curl", "-k", "--silent", "https://nginx:443/"]
-      interval: 5s
+      interval: 10s
     tmpfs: [/tmp, /run]
     privileged: true
     restart: on-failure
