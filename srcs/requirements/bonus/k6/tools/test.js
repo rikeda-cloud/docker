@@ -4,12 +4,12 @@ import { sleep } from 'k6';
 export let options = {
 	insecureSkipTLSVerify: true,
 	stages: [
+		{ target: 2, duration: '10s' },
+		{ target: 5, duration: '10s' },
 		{ target: 10, duration: '10s' },
-		{ target: 25, duration: '10s' },
-		{ target: 50, duration: '10s' },
-		{ target: 10, duration: '10s' },
-		{ target: 25, duration: '10s' },
-		{ target: 10, duration: '10s' },
+		{ target: 2, duration: '10s' },
+		{ target: 5, duration: '10s' },
+		{ target: 2, duration: '10s' },
 	]
 };
 
