@@ -1,4 +1,4 @@
-.PHONY: up, down
+.PHONY: up, down, re
 
 up:
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
