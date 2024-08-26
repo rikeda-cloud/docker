@@ -14,5 +14,8 @@
 * 稼働中のコンテナ内でCTRL+P,CTRL+Q を入力するとコンテナ外に出られる
 
 ## images
-![structure](https://github.com/user-attachments/assets/9b3ddce8-c5f9-4c77-b4ab-5571f2c15cab)
-![container](https://github.com/user-attachments/assets/4ec1c38b-83e1-40e7-9724-97899f0c7c23)
+![container](https://github.com/user-attachments/assets/58b236ad-f230-441c-8e59-d720442fd303)
+
+![structure](https://github.com/user-attachments/assets/9bca2e35-e7bc-4337-924c-02a1df0c6c5d)
+
+![bonus](https://github.com/user-attachments/assets/17a49f66-9c3a-47d6-8459-88c9a1308a1d)
