@@ -12,3 +12,7 @@
 * イメージのバージョンを指定したい場合は`Image名:バージョン番号`のようにバージョンを指定する
 * `docker commit [コンテナID] [新たに作成するイメージ名]` により、稼働しているコンテナをイメージに変換
 * 稼働中のコンテナ内でCTRL+P,CTRL+Q を入力するとコンテナ外に出られる
+
+## images
+![structure](https://github.com/user-attachments/assets/9b3ddce8-c5f9-4c77-b4ab-5571f2c15cab)
+![container](https://github.com/user-attachments/assets/4ec1c38b-83e1-40e7-9724-97899f0c7c23)
