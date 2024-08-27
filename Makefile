@@ -1,15 +1,18 @@
 .PHONY: up, down, build, stop, re
 
+DOCKER_COMPOSE = docker compose
+COMPOSE_YML_PATH = ./srcs/docker-compose.yml
+
 up:
-	@docker compose -f ./srcs/docker-compose.yml up -d --build
+	${DOCKER_COMPOSE} -f ${COMPOSE_YML_FILE} up -d --build
 
 down:
-	@docker compose -f ./srcs/docker-compose.yml down --rmi all --volumes --remove-orphans
+	${DOCKER_COMPOSE} -f ${COMPOSE_YML_FILE} down --rmi all --volumes --remove-orphans
 
 build:
-	@docker compose -f ./srcs/docker-compose.yml build
+	${DOCKER_COMPOSE} -f ${COMPOSE_YML_FILE} build
 
 stop:
-	@docker compose -f ./srcs/docker-compose.yml stop
+	${DOCKER_COMPOSE} -f ${COMPOSE_YML_FILE} stop
 
 re: down up
