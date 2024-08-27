@@ -247,11 +247,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ${HOME}/data/wordpress
+      device: /home/${HOST_USER}/data/wordpress
   mariadb-data:
     name: mariadb-data
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${HOME}/data/mariadb
+      device: /home/${HOST_USER}/data/mariadb
