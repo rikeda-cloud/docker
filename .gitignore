@@ -7,3 +7,4 @@ srcs/requirements/tools/server.csr
 srcs/requirements/tools/server.key
 srcs/requirements/nginx/server.crt
 srcs/requirements/nginx/server.key
+srcs/.env
