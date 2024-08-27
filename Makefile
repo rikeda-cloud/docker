@@ -4,15 +4,15 @@ DOCKER_COMPOSE = docker compose
 COMPOSE_YML_PATH = ./srcs/docker-compose.yml
 
 up:
-	${DOCKER_COMPOSE} -f ${COMPOSE_YML_FILE} up -d --build
+	${DOCKER_COMPOSE} -f ${COMPOSE_YML_PATH} up -d --build
 
 down:
-	${DOCKER_COMPOSE} -f ${COMPOSE_YML_FILE} down --rmi all --volumes --remove-orphans
+	${DOCKER_COMPOSE} -f ${COMPOSE_YML_PATH} down --rmi all --volumes --remove-orphans
 
 build:
-	${DOCKER_COMPOSE} -f ${COMPOSE_YML_FILE} build
+	${DOCKER_COMPOSE} -f ${COMPOSE_YML_PATH} build
 
 stop:
-	${DOCKER_COMPOSE} -f ${COMPOSE_YML_FILE} stop
+	${DOCKER_COMPOSE} -f ${COMPOSE_YML_PATH} stop
 
 re: down up
