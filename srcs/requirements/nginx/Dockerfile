@@ -25,7 +25,8 @@ RUN for var in WEB_SERVER_CERT_PATH \
 
 # certファイルのコピー
 RUN mkdir -p /etc/nginx/certs
-COPY ${WEB_SERVER_CERT_PATH} ${WEB_SERVER_KEY_PATH} /etc/nginx/certs/
+COPY ${WEB_SERVER_CERT_PATH} /etc/nginx/certs/server.crt
+COPY ${WEB_SERVER_KEY_PATH} /etc/nginx/certs/server.key
 
 # 用意したnginx.confの環境変数を置換
 COPY ./conf/nginx.conf /tmp/
