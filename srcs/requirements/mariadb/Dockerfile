@@ -31,5 +31,6 @@ RUN service mariadb start && \
 	mariadb -uroot -p${MARIADB_ROOT_PASSWORD} -e "FLUSH PRIVILEGES;"
 RUN service mariadb stop
 
+COPY ./conf/mariadb.service /etc/systemd/system/
 RUN systemctl enable mariadb
 ENTRYPOINT ["/bin/systemd"]

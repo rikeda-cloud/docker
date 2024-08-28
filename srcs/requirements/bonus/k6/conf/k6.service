@@ -5,7 +5,7 @@ After=network.target
 [Service]
 ExecStart=/usr/bin/k6 run /etc/k6/scripts/test.js
 WorkingDirectory=/etc/k6/scripts
-Restart=always
+Restart=on-abort
 User=k6
 Group=k6
 

@@ -12,6 +12,7 @@ ExecStopPost=-/usr/lib/php/php-fpm-socket-helper remove /run/php/php-fpm.sock /e
 ExecReload=/bin/kill -USR2 $MAINPID
 User=www-data
 Group=www-data
+Restart=on-abort
 
 [Install]
 WantedBy=multi-user.target

@@ -25,5 +25,6 @@ COPY ./conf/grafana.db /var/lib/grafana/
 RUN chown grafana:grafana /var/lib/grafana/grafana.db && \
 	chmod 660 /var/lib/grafana/grafana.db
 
+COPY ./conf/grafana-server.service /etc/systemd/system/
 RUN systemctl enable grafana-server
 ENTRYPOINT ["/bin/systemd"]

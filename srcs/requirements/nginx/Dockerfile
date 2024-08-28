@@ -23,6 +23,7 @@ RUN for var in WEB_SERVER_CERT_PATH \
 	fi; \
 	done
 
+# certファイルのコピー
 RUN mkdir -p /etc/nginx/certs
 COPY ${WEB_SERVER_CERT_PATH} ${WEB_SERVER_KEY_PATH} /etc/nginx/certs/
 
@@ -30,6 +31,6 @@ COPY ${WEB_SERVER_CERT_PATH} ${WEB_SERVER_KEY_PATH} /etc/nginx/certs/
 COPY ./conf/nginx.conf /tmp/
 RUN envsubst '$$DOMAIN_NAME $$DOMAIN_NAME_BONUS' < /tmp/nginx.conf > /etc/nginx/nginx.conf
 
+COPY ./conf/nginx.service /etc/systemd/system/
 RUN systemctl enable nginx
-
 ENTRYPOINT ["/bin/systemd"]

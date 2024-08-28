@@ -5,7 +5,7 @@ After=network.target
 [Service]
 ExecStart=/usr/local/bin/rust-server
 WorkingDirectory=/usr/local/bin
-Restart=always
+Restart=on-abort
 User=rust-server
 Group=rust-server
 

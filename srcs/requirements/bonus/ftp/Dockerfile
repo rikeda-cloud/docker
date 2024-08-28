@@ -33,5 +33,6 @@ RUN envsubst < /tmp/vsftpd.conf > /etc/vsftpd.conf
 # 自動起動するMTAをdisable
 RUN systemctl disable exim4
 
+COPY ./conf/vsftpd.service /etc/systemd/system/
 RUN systemctl enable vsftpd
 ENTRYPOINT ["/bin/systemd"]

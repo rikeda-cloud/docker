@@ -10,5 +10,6 @@ RUN apt-get update && apt-get -y install \
 RUN sed -i 's/bind 127.0.0.1 ::1/bind 0.0.0.0 ::0/' /etc/redis/redis.conf && \
 	sed -i 's/protected-mode yes/protected-mode no/' /etc/redis/redis.conf
 
+COPY ./conf/redis-server.service /lib/systemd/system/
 RUN systemctl enable redis-server
 ENTRYPOINT ["/bin/systemd"]
