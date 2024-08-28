@@ -148,6 +148,8 @@ services:
     ports:
       - 21:21
       - 10000-10010:10000-10010
+    networks:
+      - ftp_network
     healthcheck:
       test: ["CMD", "ftp", "localhost"]
       interval: 10s
@@ -239,6 +241,7 @@ networks:
   nginx_exporter: {name: nginx_exporter}
   monitor: {name: monitor}
   nginx_k6: {name: nginx_k6}
+  ftp_network: {name: ftp_network}
 
 volumes:
   wordpress-content:
