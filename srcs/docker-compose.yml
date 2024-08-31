@@ -200,6 +200,9 @@ services:
     image: grafana
     build:
       context: ./requirements/bonus/grafana/
+      args:
+        - GRAFANA_ADMIN_USER=${GRAFANA_ADMIN_USER}
+        - GRAFANA_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
     depends_on:
       prometheus: {condition: service_healthy}
     ports: [3000:3000]

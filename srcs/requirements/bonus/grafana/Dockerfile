@@ -4,7 +4,19 @@ RUN apt-get update && apt-get -y install \
 	apt-transport-https \
 	curl \
 	gpg \
+	sqlite3 \
 	systemd
+
+ARG GRAFANA_ADMIN_USER \
+	GRAFANA_ADMIN_PASSWORD
+
+RUN for var in GRAFANA_ADMIN_USER \
+	GRAFANA_ADMIN_PASSWORD; \
+	do \
+	if [ -z "$(eval echo \$$var)" ]; then \
+	echo "$var is not set" && exit 1; \
+	fi; \
+	done
 
 # grafanaをインストール
 RUN mkdir -p /etc/apt/keyrings && \
@@ -24,6 +36,9 @@ COPY ./conf/nginx-prometheus-exporter.json /var/lib/grafana/dashboards/
 COPY ./conf/grafana.db /var/lib/grafana/
 RUN chown grafana:grafana /var/lib/grafana/grafana.db && \
 	chmod 660 /var/lib/grafana/grafana.db
+
+RUN grafana-cli admin reset-admin-password ${GRAFANA_ADMIN_PASSWORD}
+RUN sqlite3 /var/lib/grafana/grafana.db "UPDATE user SET login='${GRAFANA_ADMIN_USER}' WHERE login='admin';"
 
 COPY ./conf/grafana-server.service /etc/systemd/system/
 RUN systemctl enable grafana-server
